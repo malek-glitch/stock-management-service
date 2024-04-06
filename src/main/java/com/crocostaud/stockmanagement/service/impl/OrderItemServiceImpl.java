@@ -1,8 +1,6 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.OrderDto;
 import com.crocostaud.stockmanagement.dto.OrderItemDto;
-import com.crocostaud.stockmanagement.dto.ProductDto;
 import com.crocostaud.stockmanagement.model.Order;
 import com.crocostaud.stockmanagement.model.OrderItem;
 import com.crocostaud.stockmanagement.model.Product;
@@ -23,8 +21,8 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public OrderItemDto createOrderItem(OrderItemDto orderItemDto) {
         OrderItem orderItem = OrderItem.builder()
-                .product( new Product(orderItemDto.getProduct().getId()) )
-                .order( new Order(orderItemDto.getOrderDto().getId()) )
+                .product(new Product(orderItemDto.getProductId()))
+                .order(new Order(orderItemDto.getOrderId()))
                 .price(orderItemDto.getPrice())
                 .quantity(orderItemDto.getQuantity())
                 .TVA(orderItemDto.getTVA())
@@ -35,6 +33,9 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     private OrderItemDto mapToDto(OrderItem orderItem) {
+        /*
+        TODO: cleanup
+
         Order order = orderItem.getOrder();
         OrderDto orderDto = OrderDto.builder()
                 .id(order.getId())
@@ -50,10 +51,11 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .description(product.getDescription())
                 .SupplierName(product.getSupplierName())
                 .build();
+*/
 
         return OrderItemDto.builder()
-                .orderDto(orderDto)
-                .product(productDto)
+                .orderId(orderItem.getOrder().getId())
+                .productId(orderItem.getProduct().getId())
                 .id(orderItem.getId())
                 .price(orderItem.getPrice())
                 .quantity(orderItem.getQuantity())
@@ -70,6 +72,6 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     public void deleteOrderItem(Long id) {
-
+        orderItemRepo.deleteById(id);
     }
 }

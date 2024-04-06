@@ -1,8 +1,13 @@
 package com.crocostaud.stockmanagement.model;
 
 import com.crocostaud.stockmanagement.model.utils.Commande;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -20,13 +25,9 @@ import java.util.Set;
 @ToString
 @Entity(name = "orders")
 public class Order extends Commande {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne
     private Shop shop;
-
 
     @ManyToOne
     @JoinColumn(name = "provider_id")
@@ -41,8 +42,7 @@ public class Order extends Commande {
     }
 
     public Order(Long id) {
-        super();
-        this.id = id;
+        super(id);
     }
 
 

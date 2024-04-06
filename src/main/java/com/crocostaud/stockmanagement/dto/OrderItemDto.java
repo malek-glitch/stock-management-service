@@ -1,10 +1,7 @@
 package com.crocostaud.stockmanagement.dto;
 
 import com.crocostaud.stockmanagement.model.OrderItem;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -13,6 +10,7 @@ import java.io.Serializable;
  */
 @AllArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode
 @Builder
 public class OrderItemDto implements Serializable {
@@ -23,6 +21,6 @@ public class OrderItemDto implements Serializable {
     private int TVA;
     private int discount;
 
-    private ProductDto product;
-    private OrderDto orderDto;
+    private Long productId;
+    private Long orderId;
 }

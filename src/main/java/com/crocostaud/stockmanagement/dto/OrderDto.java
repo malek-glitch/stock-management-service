@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * DTO for {@link Order}
@@ -19,7 +19,7 @@ import java.util.Date;
 public class OrderDto implements Serializable {
 
     private final Long id;
-    private Date date;
+    private LocalDateTime date;
     private Double totalPrice;
     private Double paidAmount;
     private int discount;

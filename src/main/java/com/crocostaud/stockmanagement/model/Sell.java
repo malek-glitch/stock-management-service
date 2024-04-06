@@ -1,22 +1,23 @@
 package com.crocostaud.stockmanagement.model;
 
 import com.crocostaud.stockmanagement.model.utils.Commande;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-@ToString
+
 @RequiredArgsConstructor
 @Entity
 public class Sell extends Commande {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "client_id")

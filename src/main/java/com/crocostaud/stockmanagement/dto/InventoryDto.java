@@ -14,5 +14,6 @@ public class InventoryDto implements Serializable {
     Long id;
     int quantityAvailable;
     int minimumStockQuantity;
-    ProductDto product;
+    Long productId;
+
 }

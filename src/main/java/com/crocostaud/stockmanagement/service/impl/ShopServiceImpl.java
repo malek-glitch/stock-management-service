@@ -1,6 +1,5 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.ShopNotFoundException;
 import com.crocostaud.stockmanagement.dto.ShopDto;
 import com.crocostaud.stockmanagement.model.*;
 import com.crocostaud.stockmanagement.repository.ShopRepository;

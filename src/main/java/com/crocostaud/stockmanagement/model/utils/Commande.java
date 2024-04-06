@@ -4,11 +4,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -21,7 +24,7 @@ public class Commande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    protected Date date;
+    protected LocalDateTime date;
 
     /** the total price of the {@link Commande} <br>
      * this field is calculated as the sum of all prices of the commandItems*/
@@ -37,6 +40,10 @@ public class Commande {
      *<code> REST = (totalPrice - (totalPrice * discount) / 100 ) -  paidAmount </code>
      **/
     protected Double paidAmount ;
+
+    public Commande(Long id) {
+        this.id = id;
+    }
 
 
     @Override

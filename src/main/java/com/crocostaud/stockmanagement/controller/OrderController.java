@@ -2,13 +2,10 @@ package com.crocostaud.stockmanagement.controller;
 
 
 import com.crocostaud.stockmanagement.dto.OrderDto;
-import com.crocostaud.stockmanagement.dto.OrderItemDto;
-import com.crocostaud.stockmanagement.repository.OrderRepository;
 import com.crocostaud.stockmanagement.service.OrderService;
+import com.crocostaud.stockmanagement.util.OrderRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -21,8 +18,14 @@ public class OrderController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<OrderDto> create(@RequestBody OrderDto orderDto, @RequestBody List<OrderItemDto> orderItems) {
-        OrderDto savedOrder = orderService.createOrder(orderDto);
+    public ResponseEntity<OrderDto> create(@RequestBody OrderRequest orderRequest) {
+        OrderDto savedOrder = orderService.createOrder(orderRequest.getOrderDto(), orderRequest.getOrderItems());
+        return ResponseEntity.ok(savedOrder);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<OrderDto> create(@RequestBody OrderDto orderDto) {
+        OrderDto savedOrder = orderService.createOrder(orderDto, null);
         return ResponseEntity.ok(savedOrder);
     }
 
@@ -36,3 +39,5 @@ public class OrderController {
     }
 
 }
+
+
