@@ -37,7 +37,7 @@ public class Commande {
      * if the paid amount is equivalent to the total price then the {@link com.crocostaud.stockmanagement.model.Order order}
      * is considered paid <br/> otherwise the {@link com.crocostaud.stockmanagement.model.Order order} is not fully paid and there is a {@code REST}<br>
      * <em>the {@code REST} is calculated as: </em> <br>
-     *<code> REST = (totalPrice - (totalPrice * discount) / 100 ) -  paidAmount </code>
+     *<pre><code> REST = (totalPrice - (totalPrice * discount) / 100 ) -  paidAmount </code></pre>
      **/
     protected Double paidAmount ;
 

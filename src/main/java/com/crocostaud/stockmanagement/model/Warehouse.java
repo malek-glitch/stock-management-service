@@ -2,7 +2,9 @@ package com.crocostaud.stockmanagement.model;
 
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.LinkedHashSet;
@@ -11,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
+
 @RequiredArgsConstructor
 @Entity
 public class Warehouse {
@@ -30,6 +32,10 @@ public class Warehouse {
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
+
+    public Warehouse(Long id) {
+        this.id = id;
+    }
 
 
     @Override

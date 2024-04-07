@@ -1,7 +1,6 @@
 package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.ShopDto;
-import com.crocostaud.stockmanagement.model.Shop;
 import com.crocostaud.stockmanagement.service.ShopService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,7 @@ public class ShopController {
         ShopDto shop = shopService.getShop(shopId);
 
         if (shop == null)
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(shop);
     }

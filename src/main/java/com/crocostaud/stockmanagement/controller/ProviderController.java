@@ -1,7 +1,6 @@
 package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.ProviderDto;
-import com.crocostaud.stockmanagement.model.Provider;
 import com.crocostaud.stockmanagement.service.ProviderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ public class ProviderController {
         ProviderDto provider = providerService.getProvider(providerId);
 
         if (provider == null)
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(provider);
     }
