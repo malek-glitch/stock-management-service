@@ -13,7 +13,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-
 @RequiredArgsConstructor
 @Entity
 public class Warehouse {
