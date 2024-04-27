@@ -57,7 +57,7 @@ public class InventoryServiceImpl implements InventoryService {
     public InventoryDto updateInventory(InventoryDto inventoryDto, Long id) {
         Optional<Inventory> inventoryOptional = inventoryRepo.findById(id);
 
-        if (inventoryOptional.isEmpty() || id != inventoryDto.getId())
+        if (inventoryOptional.isEmpty() || !id.equals(inventoryDto.getId()))
             return null;
 
         inventoryRepo.updateInventory(inventoryDto.getQuantityAvailable()

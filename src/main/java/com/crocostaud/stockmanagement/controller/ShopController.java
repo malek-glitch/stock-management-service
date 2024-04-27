@@ -2,6 +2,7 @@ package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.ShopDto;
 import com.crocostaud.stockmanagement.service.ShopService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/shop")
 public class ShopController {
 
-
     private final ShopService shopService;
 
+    @Autowired
     public ShopController(ShopService shopService) {
         this.shopService = shopService;
     }

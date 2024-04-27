@@ -22,10 +22,12 @@ public class Shop {
     private String email;
     private String phoneNumbers;
 
-    /**the accule users of the shop with different roles (e.g. ADMIN, USER)*/
+    /**
+     * the accule shopUsers of the shop with different roles (e.g. ADMIN, USER)
+     */
     @OneToMany(mappedBy = "shop", orphanRemoval = true)
     @Builder.Default
-    private Set<User> users = new LinkedHashSet<>();
+    private Set<ShopUser> shopUsers = new LinkedHashSet<>();
 
 /**the different warehouses where the shop stock its {@link Product products}
  * among them the main Local of the shop*/
@@ -51,12 +53,12 @@ public class Shop {
     /**the list of {@link Inventory inventories} of the {@link Shop}
      * where each {@link Inventory} represent the relation between a {@link Product} and the {@link Warehouse}
      *( <em> in short it represent where and how many of a certain {@link Product} are stored </em> )*/
-    @OneToMany(mappedBy = "shop", orphanRemoval = true)
+    @OneToMany(mappedBy = "shop")
     @Builder.Default
     private Set<Inventory> inventories = new LinkedHashSet<>();
 
     /**this field represent the list Of {@link Sell sells} made by the {@link Shop} to the {@link Client clients}*/
-    @OneToMany(mappedBy = "shop", orphanRemoval = true)
+    @OneToMany(mappedBy = "shop")
     @Builder.Default
     private Set<Sell> sells = new LinkedHashSet<>();
 

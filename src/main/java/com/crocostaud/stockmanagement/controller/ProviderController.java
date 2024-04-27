@@ -2,6 +2,7 @@ package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.ProviderDto;
 import com.crocostaud.stockmanagement.service.ProviderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ public class ProviderController {
 
     private final ProviderService providerService;
 
+    @Autowired
     public ProviderController(ProviderService providerService) {
         this.providerService = providerService;
     }

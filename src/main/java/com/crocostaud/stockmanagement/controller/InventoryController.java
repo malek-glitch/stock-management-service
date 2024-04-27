@@ -2,6 +2,7 @@ package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.InventoryDto;
 import com.crocostaud.stockmanagement.service.InventoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class InventoryController {
     private final InventoryService inventoryService;
 
+    @Autowired
     public InventoryController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
     }

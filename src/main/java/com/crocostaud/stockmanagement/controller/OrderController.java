@@ -5,6 +5,7 @@ import com.crocostaud.stockmanagement.dto.OrderDto;
 import com.crocostaud.stockmanagement.dto.OrderItemDto;
 import com.crocostaud.stockmanagement.service.OrderService;
 import com.crocostaud.stockmanagement.util.OrderRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }

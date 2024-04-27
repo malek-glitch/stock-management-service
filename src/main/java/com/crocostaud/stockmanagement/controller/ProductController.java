@@ -3,6 +3,7 @@ package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.ProductDto;
 import com.crocostaud.stockmanagement.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -35,7 +37,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<ProductDto>> getAll(){
         return ResponseEntity.ok( productService.getAllProducts() );
     }
