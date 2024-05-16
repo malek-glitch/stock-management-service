@@ -21,4 +21,6 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     @Modifying
     @Query("update Shop s set s.name = ?2, s.email = ?3, s.phoneNumbers = ?4 where s.id = ?1")
     int updateNameAndEmailAndPhoneNumbersById(Long id, String name, String email, String phoneNumbers);
+
+    void deleteById(Long shopId);
 }

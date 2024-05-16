@@ -1,17 +1,15 @@
 package com.crocostaud.stockmanagement.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
-
-import java.io.Serializable;
 
 /**
  * DTO for {@link com.crocostaud.stockmanagement.model.Provider}
  */
-@Value
 @Builder
+@Getter
+@Setter
 public class ProviderDto {
     Long id;
     String name;

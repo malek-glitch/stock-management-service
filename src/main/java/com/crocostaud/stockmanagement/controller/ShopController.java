@@ -1,8 +1,12 @@
 package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.ShopDto;
+import com.crocostaud.stockmanagement.model.ShopUser;
 import com.crocostaud.stockmanagement.service.ShopService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.crocostaud.stockmanagement.service.UserService;
+import com.crocostaud.stockmanagement.utils.annotation.Username;
+import com.crocostaud.stockmanagement.utils.security.Auth;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,26 +16,63 @@ import org.springframework.web.bind.annotation.*;
 public class ShopController {
 
     private final ShopService shopService;
+    private final UserService userService;
+    private final Auth auth;
 
-    @Autowired
-    public ShopController(ShopService shopService) {
+    public ShopController(ShopService shopService, Auth auth, UserService userService) {
         this.shopService = shopService;
+        this.auth = auth;
+        this.userService = userService;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<ShopDto> create(@RequestBody ShopDto shopDto) {
+    @PostMapping
+    public ResponseEntity<ShopDto> create(@RequestBody ShopDto shopDto, @Username String username) {
+        ShopUser user = auth.getUser(username);
+        if (user == null || user.getShop() != null) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(405)).build();
+        }
         ShopDto savedShop = shopService.createShop(shopDto);
+        userService.setShop(user.getId(), savedShop.getId());
         return ResponseEntity.ok(savedShop);
     }
 
-    @GetMapping("/{shopId}")
-    public ResponseEntity<ShopDto> get(@PathVariable Long shopId) {
-        ShopDto shop = shopService.getShop(shopId);
+    @PutMapping
+    public ResponseEntity<ShopDto> update(@RequestBody ShopDto shopDto, @Username String username) {
+        ShopUser user = auth.getUser(username);
+        System.out.println(username + "  -> " + user);
+        if (user == null || user.getShop() == null) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).build();
+        }
+
+        if (!user.getShop().getId().equals(shopDto.getId()))
+            return ResponseEntity.status(HttpStatusCode.valueOf(400)).build();
+
+        ShopDto updatedShop = shopService.updateShop(shopDto, user.getShop().getId());
+        return ResponseEntity.ok(updatedShop);
+    }
+
+    @GetMapping
+    public ResponseEntity<ShopDto> get(@Username String username) {
+        ShopUser user = auth.getUser(username);
+        System.out.println(username + "  -> " + user);
+
+        ShopDto shop = shopService.getShop(username);
 
         if (shop == null)
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(shop);
+    }
+
+    @DeleteMapping("/{shopId}")
+    public ResponseEntity<ShopDto> delete(@Username String username, @PathVariable Long shopId) {
+        ShopUser user = auth.getUser(username);
+//        if (user == null || user.getShop() == null) {
+//            return ResponseEntity.status(HttpStatusCode.valueOf(400)).build();
+//        }
+        ShopDto shop = shopService.getShop(shopId);
+        return ResponseEntity.ok(shopService.delete(shop.getId()));
+
     }
 
 }

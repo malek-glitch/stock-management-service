@@ -4,6 +4,7 @@ import com.crocostaud.stockmanagement.dto.ShopDto;
 import com.crocostaud.stockmanagement.model.*;
 import com.crocostaud.stockmanagement.repository.ShopRepository;
 import com.crocostaud.stockmanagement.service.ShopService;
+import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,9 +13,11 @@ import java.util.Optional;
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepos;
+    private final Auth auth;
 
-    public ShopServiceImpl(ShopRepository shopRepos) {
+    public ShopServiceImpl(ShopRepository shopRepos, Auth auth) {
         this.shopRepos = shopRepos;
+        this.auth = auth;
     }
 
     @Override
@@ -33,6 +36,14 @@ public class ShopServiceImpl implements ShopService {
     public ShopDto getShop(Long shopId) {
         Optional<Shop> shop = shopRepos.findById(shopId);
         return shop.map(this::mapToDto).orElse(null);
+    }
+
+    @Override
+    public ShopDto getShop(String username) {
+        Shop shop = auth.getShop(username);
+        if (shop == null)
+            return null;
+        return mapToDto(shop);
     }
 
     private ShopDto mapToDto(Shop shop) {
@@ -82,5 +93,12 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void addOrder(Order order) {
         //TODO : implement
+    }
+
+    @Override
+    public ShopDto delete(Long shopId) {
+        ShopDto shopDto = getShop(shopId);
+        shopRepos.deleteById(shopId);
+        return shopDto;
     }
 }

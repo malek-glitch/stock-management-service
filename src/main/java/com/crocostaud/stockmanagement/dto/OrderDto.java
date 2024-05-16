@@ -1,10 +1,7 @@
 package com.crocostaud.stockmanagement.dto;
 
 import com.crocostaud.stockmanagement.model.Order;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode
 public class OrderDto implements Serializable {
 

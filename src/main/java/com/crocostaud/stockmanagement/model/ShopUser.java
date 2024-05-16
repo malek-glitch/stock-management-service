@@ -1,20 +1,19 @@
 package com.crocostaud.stockmanagement.model;
 
-import com.crocostaud.stockmanagement.model.utils.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
-import java.util.Set;
+
 
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity(name = "user")
 @AllArgsConstructor
+@ToString
 public class ShopUser {
 
     @Id
@@ -23,16 +22,23 @@ public class ShopUser {
 
     @Column(unique = true)
     private String username;
+
     private String password;
+//
+//    @Override
+//    public String toString() {
+//        return "ShopUser{" +
+//                "id=" + id +
+//                ", username='" + username + '\'' +
+//                ", password='" + "[PROTECTED]" + '\'' +
+//                ", email='" + email + '\'' +
+//                ", role='" + role + '\'' +
+//                '}';
+//    }
+
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    @ToString.Exclude
-    private Set<Role> roles;
+    private String role;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")

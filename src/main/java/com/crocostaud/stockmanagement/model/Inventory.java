@@ -23,6 +23,7 @@ public class Inventory {
     private Long id;
 
     private int quantityAvailable;
+    @Builder.Default
     private int minimumStockQuantity = 0;
     private Double price; // price of a single product
     private int tva; // tax of the product

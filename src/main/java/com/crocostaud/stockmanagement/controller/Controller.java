@@ -1,19 +1,47 @@
 package com.crocostaud.stockmanagement.controller;
 
+import com.crocostaud.stockmanagement.dto.UserDto;
+import com.crocostaud.stockmanagement.model.ShopUser;
+import com.crocostaud.stockmanagement.service.UserService;
+import com.crocostaud.stockmanagement.utils.annotation.Username;
+import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping
 public class Controller {
 
+    private final Auth auth;
+    private final UserService userService;
 
-    // 53 044 193 m. manel
-    @GetMapping
-    private ResponseEntity< String > testMethod(){
-        return ResponseEntity.ok("hello world!");
+    public Controller(Auth auth, UserService userService) {
+        this.auth = auth;
+        this.userService = userService;
+    }
+
+
+    // 53 044 193 m.Manel
+//    @GetMapping
+    private ResponseEntity<UserDto> testMethod(@Username String username) {
+        System.out.println(username);
+        ShopUser user = auth.getUser(username);
+        UserDto userDto = UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .role(user.getRole())
+                .email(user.getEmail())
+                .shopId(user.getShop().getId())
+                .build();
+        return ResponseEntity.ok(userDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UserDto userDto) {
+        System.out.println("________________________________________________");
+        System.out.println((userDto.getUsername() + " " + userDto.getPassword()));
+        return ResponseEntity.ok(userService.login(userDto));
     }
 
     @GetMapping("/home")
@@ -25,4 +53,5 @@ public class Controller {
     private ResponseEntity<String> dashboard() {
         return ResponseEntity.ok("hello dashboard!");
     }
+
 }

@@ -1,7 +1,8 @@
 package com.crocostaud.stockmanagement.service;
 
 import com.crocostaud.stockmanagement.dto.ProviderDto;
-import com.crocostaud.stockmanagement.model.Shop;
+
+import java.util.List;
 
 public interface ProviderService {
     ProviderDto createProvider(ProviderDto providerDto);
@@ -9,4 +10,5 @@ public interface ProviderService {
     ProviderDto getProvider(Long id);
     void removeProvider(Long id);
 
+    List<ProviderDto> getAllProviders(Long shopId);
 }

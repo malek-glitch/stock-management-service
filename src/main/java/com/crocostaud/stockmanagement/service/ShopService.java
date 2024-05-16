@@ -8,6 +8,8 @@ public interface ShopService {
 
     ShopDto createShop(ShopDto shopDto);
     ShopDto getShop(Long shopId);
+
+    ShopDto getShop(String username);
     ShopDto updateShop(ShopDto shopDto, Long id);
 
     void addClient(Client client);
@@ -19,5 +21,5 @@ public interface ShopService {
     void addSell(Sell sell);
     void addOrder(Order order);
 
-
+    ShopDto delete(Long shopId);
 }

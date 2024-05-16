@@ -7,12 +7,13 @@ import com.crocostaud.stockmanagement.repository.ProviderRepository;
 import com.crocostaud.stockmanagement.service.ProviderService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProviderServiceImpl implements ProviderService {
 
-    private  final ProviderRepository providerRepo;
+    private final ProviderRepository providerRepo;
 
     public ProviderServiceImpl(ProviderRepository providerRepo) {
         this.providerRepo = providerRepo;
@@ -57,14 +58,22 @@ public class ProviderServiceImpl implements ProviderService {
     public void removeProvider(Long id) {
         providerRepo.deleteById(id);
     }
-    private ProviderDto mapToDto(Provider provider){
+
+    @Override
+    public List<ProviderDto> getAllProviders(Long shopId) {
+        return providerRepo.findByShop_Id(shopId);
+    }
+
+    private ProviderDto mapToDto(Provider provider) {
+
+        Long shopId = provider.getShop() == null ? null : provider.getShop().getId();
 
         return ProviderDto.builder()
                 .id(provider.getId())
                 .name(provider.getName())
                 .email(provider.getEmail())
                 .phone(provider.getPhone())
-                .shopId(provider.getShop().getId())
+                .shopId(shopId)
                 .build();
     }
 }
