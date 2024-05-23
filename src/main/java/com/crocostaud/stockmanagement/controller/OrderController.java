@@ -1,9 +1,9 @@
 package com.crocostaud.stockmanagement.controller;
 
 
-import com.crocostaud.stockmanagement.dto.OrderDto;
-import com.crocostaud.stockmanagement.dto.OrderItemDto;
-import com.crocostaud.stockmanagement.model.ShopUser;
+import com.crocostaud.stockmanagement.dto.stock.OrderDto;
+import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
+import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.OrderService;
 import com.crocostaud.stockmanagement.utils.annotation.Username;
 import com.crocostaud.stockmanagement.utils.request.OrderRequest;

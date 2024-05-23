@@ -1,11 +1,14 @@
 package com.crocostaud.stockmanagement.service;
 
-import com.crocostaud.stockmanagement.dto.InventoryDto;
+import com.crocostaud.stockmanagement.dto.part.PartDto;
+import com.crocostaud.stockmanagement.dto.stock.InventoryDto;
 
 import java.util.List;
 
 public interface InventoryService {
-    InventoryDto getInventory(Long id);
+    InventoryDto getInventory(Long inventoryId);
+
+    PartDto getPartFromInventory(Long inventoryId);
 
     List<InventoryDto> getInventoryByShopId(Long ShopId);
 
@@ -14,4 +17,6 @@ public interface InventoryService {
     InventoryDto updateInventory(InventoryDto inventoryDto, Long id);
 
     void deleteInventory(Long id);
+
+
 }

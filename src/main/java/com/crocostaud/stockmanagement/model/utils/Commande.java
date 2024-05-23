@@ -1,5 +1,6 @@
 package com.crocostaud.stockmanagement.model.utils;
 
+import com.crocostaud.stockmanagement.model.stock.Order;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,8 +35,8 @@ public class Commande {
     protected int discount;
 
     /**this field represent the paid amount of the total price of the {@link Commande commande} <br/>
-     * if the paid amount is equivalent to the total price then the {@link com.crocostaud.stockmanagement.model.Order order}
-     * is considered paid <br/> otherwise the {@link com.crocostaud.stockmanagement.model.Order order} is not fully paid and there is a {@code REST}<br>
+     * if the paid amount is equivalent to the total price then the {@link Order order}
+     * is considered paid <br/> otherwise the {@link Order order} is not fully paid and there is a {@code REST}<br>
      * <em>the {@code REST} is calculated as: </em> <br>
      *<pre><code> REST = (totalPrice - (totalPrice * discount) / 100 ) -  paidAmount </code></pre>
      **/

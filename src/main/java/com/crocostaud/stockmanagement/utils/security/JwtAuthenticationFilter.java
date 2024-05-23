@@ -1,25 +1,64 @@
 package com.crocostaud.stockmanagement.utils.security;
 
+
+import com.crocostaud.stockmanagement.model.stock.ShopUser;
+import com.crocostaud.stockmanagement.service.JwtService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Configuration;
+import lombok.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsService userService;
+
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+    }
+
+    @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        final String authHeader = request.getHeader("Authorization");
+        if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        final String jwt = authHeader.substring(7);
+        final String username = jwtService.extractUserName(jwt);
+        if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
+            ShopUser userDetails = (ShopUser) userService.loadUserByUsername(username);
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                context.setAuthentication(authToken);
+                SecurityContextHolder.setContext(context);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+}
+/*
 
 @Configuration
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
+    private static final String HEADER_STRING = "Authorization";
     private final UserDetailsService userDetailsService;
     private final JwtTokenService jwtTokenService;
 
@@ -28,19 +67,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtTokenService = jwtTokenService;
     }
 
-    private static final String TOKEN_PREFIX = "Bearer ";
-    private static final String HEADER_STRING = "Authorization";
-
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         String header = req.getHeader(HEADER_STRING);
-        String username = null;
-        if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            String authToken = header.replace(TOKEN_PREFIX, "");
-            username = jwtTokenService.extractUsernameFromToken(authToken);
-        } else {
+        
+
+        if (header == null) {
             logger.warn("couldn't find bearer string, will ignore the header");
+            return;
         }
+
+        String username = jwtTokenService.extractUsernameFromToken(header);
         if (StringUtils.hasText(username)) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -51,6 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(req, res);
     }
 }
+*/
 
 /*
 @Configuration

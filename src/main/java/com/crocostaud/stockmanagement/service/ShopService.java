@@ -1,7 +1,7 @@
 package com.crocostaud.stockmanagement.service;
 
-import com.crocostaud.stockmanagement.dto.ShopDto;
-import com.crocostaud.stockmanagement.model.*;
+import com.crocostaud.stockmanagement.dto.stock.ShopDto;
+import com.crocostaud.stockmanagement.model.stock.*;
 
 
 public interface ShopService {

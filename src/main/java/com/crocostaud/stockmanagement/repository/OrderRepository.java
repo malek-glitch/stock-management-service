@@ -1,6 +1,6 @@
 package com.crocostaud.stockmanagement.repository;
 
-import com.crocostaud.stockmanagement.model.Order;
+import com.crocostaud.stockmanagement.model.stock.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

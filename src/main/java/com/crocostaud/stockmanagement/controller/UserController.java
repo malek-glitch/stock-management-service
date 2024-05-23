@@ -1,6 +1,7 @@
 package com.crocostaud.stockmanagement.controller;
 
-import com.crocostaud.stockmanagement.dto.UserDto;
+import com.crocostaud.stockmanagement.dto.stock.UserDto;
+import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.UserService;
 import com.crocostaud.stockmanagement.utils.annotation.Username;
 import com.crocostaud.stockmanagement.utils.security.Auth;
@@ -45,6 +46,7 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAll());
     }
+
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId, @Username String username) {
         long id = auth.getUser(username) == null ? -1 : auth.getUser(username).getId();
@@ -57,6 +59,21 @@ public class UserController {
         if (user == null)
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok().body(user);
+    }
+
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user) {
+        ShopUser authUser = auth.getUser(user.getUsername());
+        if (authUser == null)
+            return ResponseEntity.noContent().build();
+        long id = authUser.getId();
+        if (user.getId() != id) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User id not match");
+        }
+        UserDto updatedUser = userService.updateUser(user, id);
+        if (updatedUser == null)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(updatedUser);
     }
 
 }

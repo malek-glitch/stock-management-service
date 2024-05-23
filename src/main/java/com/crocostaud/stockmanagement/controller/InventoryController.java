@@ -1,6 +1,6 @@
 package com.crocostaud.stockmanagement.controller;
 
-import com.crocostaud.stockmanagement.dto.InventoryDto;
+import com.crocostaud.stockmanagement.dto.stock.InventoryDto;
 import com.crocostaud.stockmanagement.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

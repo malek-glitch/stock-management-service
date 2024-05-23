@@ -1,10 +1,11 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.InventoryDto;
-import com.crocostaud.stockmanagement.model.Inventory;
-import com.crocostaud.stockmanagement.model.Product;
-import com.crocostaud.stockmanagement.model.Shop;
-import com.crocostaud.stockmanagement.model.Warehouse;
+import com.crocostaud.stockmanagement.dto.part.PartDto;
+import com.crocostaud.stockmanagement.dto.stock.InventoryDto;
+import com.crocostaud.stockmanagement.model.part.Part;
+import com.crocostaud.stockmanagement.model.stock.Inventory;
+import com.crocostaud.stockmanagement.model.stock.Shop;
+import com.crocostaud.stockmanagement.model.stock.Warehouse;
 import com.crocostaud.stockmanagement.repository.InventoryRepository;
 import com.crocostaud.stockmanagement.service.InventoryService;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,26 @@ import java.util.Optional;
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepo;
+//    private final PartRepository partRepo;
 
     public InventoryServiceImpl(InventoryRepository inventoryRepo) {
         this.inventoryRepo = inventoryRepo;
+//        this.partRepo = partRepo;
     }
 
     @Override
-    public InventoryDto getInventory(Long id) {
-        Optional<Inventory> inventoryOptional = inventoryRepo.findById(id);
+    public InventoryDto getInventory(Long inventoryId) {
+        Optional<Inventory> inventoryOptional = inventoryRepo.findById(inventoryId);
         return inventoryOptional.map(this::mapToDto).orElse(null);
+    }
+
+    @Override
+    public PartDto getPartFromInventory(Long inventoryId) {
+        Optional<Inventory> inventoryOptional = inventoryRepo.findById(inventoryId);
+        if (inventoryOptional.isEmpty())
+            return null;
+        Inventory inventory = inventoryOptional.get();
+        return inventory.getPart().toDTO();
     }
 
     @Override
@@ -41,7 +53,7 @@ public class InventoryServiceImpl implements InventoryService {
 
         Inventory inventory = Inventory.builder()
                 .shop(new Shop(inventoryDto.getShopId()))
-                .product(new Product(inventoryDto.getProductId()))
+                .part(new Part(inventoryDto.getPartId()))
                 .warehouse(new Warehouse(inventoryDto.getWarehouseId()))
                 .minimumStockQuantity(inventoryDto.getMinimumStockQuantity())
                 .quantityAvailable(inventoryDto.getQuantityAvailable())
@@ -78,7 +90,7 @@ public class InventoryServiceImpl implements InventoryService {
         return InventoryDto.builder()
                 .id(inventory.getId())
                 .shopId(inventory.getShop().getId())
-                .productId(inventory.getProduct().getId())
+                .partId(inventory.getPart().getId())
                 .warehouseId(inventory.getWarehouse().getId())
                 .quantityAvailable(inventory.getQuantityAvailable())
                 .minimumStockQuantity(inventory.getMinimumStockQuantity())

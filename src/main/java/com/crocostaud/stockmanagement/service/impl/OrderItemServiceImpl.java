@@ -1,9 +1,9 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.OrderItemDto;
-import com.crocostaud.stockmanagement.model.Order;
-import com.crocostaud.stockmanagement.model.OrderItem;
-import com.crocostaud.stockmanagement.model.Product;
+import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
+import com.crocostaud.stockmanagement.model.part.Part;
+import com.crocostaud.stockmanagement.model.stock.Order;
+import com.crocostaud.stockmanagement.model.stock.OrderItem;
 import com.crocostaud.stockmanagement.repository.OrderItemRepository;
 import com.crocostaud.stockmanagement.service.OrderItemService;
 import org.springframework.stereotype.Service;
@@ -11,17 +11,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
-
     private final OrderItemRepository orderItemRepo;
 
     public OrderItemServiceImpl(OrderItemRepository orderItemRepo) {
         this.orderItemRepo = orderItemRepo;
+
     }
 
     @Override
     public OrderItemDto createOrderItem(OrderItemDto orderItemDto) {
+        Part part = null;
+
         OrderItem orderItem = OrderItem.builder()
-                .product(new Product(orderItemDto.getProductId()))
+                .part(part)
                 .order(new Order(orderItemDto.getOrderId()))
                 .price(orderItemDto.getPrice())
                 .quantity(orderItemDto.getQuantity())
@@ -55,7 +57,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         return OrderItemDto.builder()
                 .orderId(orderItem.getOrder().getId())
-                .productId(orderItem.getProduct().getId())
+                .partId(orderItem.getPart().getId())
                 .id(orderItem.getId())
                 .price(orderItem.getPrice())
                 .quantity(orderItem.getQuantity())

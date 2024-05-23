@@ -1,11 +1,10 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.UserDto;
-import com.crocostaud.stockmanagement.model.Shop;
-import com.crocostaud.stockmanagement.model.ShopUser;
+import com.crocostaud.stockmanagement.dto.stock.UserDto;
+import com.crocostaud.stockmanagement.model.stock.Shop;
+import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.repository.UserRepository;
 import com.crocostaud.stockmanagement.service.UserService;
-import com.crocostaud.stockmanagement.utils.security.JwtTokenService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,31 +23,23 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepo;
 
-    private final JwtTokenService jwtTokenService;
+    private final JwtServiceImpl jwtService;
 
     private final AuthenticationProvider authenticationProvider;
 
-    public UserServiceImpl(PasswordEncoder bcryptEncoder, UserRepository userRepo, AuthenticationProvider authenticationProvider) {
+    public UserServiceImpl(PasswordEncoder bcryptEncoder, UserRepository userRepo, JwtServiceImpl jwtService, AuthenticationProvider authenticationProvider) {
         this.bcryptEncoder = bcryptEncoder;
         this.userRepo = userRepo;
+        this.jwtService = jwtService;
         this.authenticationProvider = authenticationProvider;
-        this.jwtTokenService = new JwtTokenService();
     }
 
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        ShopUser user = ShopUser.builder().username(userDto.getUsername()).password(encryptPassword(userDto.getPassword())).email(userDto.getEmail()).role(userDto.getRole()).build();
 
-
-        ShopUser user = ShopUser.builder()
-                .username(userDto.getUsername())
-                .password(encryptPassword(userDto.getPassword()))
-                .email(userDto.getEmail())
-                .role(userDto.getRole())
-                .build();
-
-        if (userDto.getShopId() != null)
-            user.setShop(new Shop(userDto.getShopId()));
+        if (userDto.getShopId() != null) user.setShop(new Shop(userDto.getShopId()));
 
         ShopUser savedUser = null;
         try {
@@ -61,39 +52,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto, Long id) {
-        if (!userDto.getId().equals(id))
-            return null;
-        ShopUser user;
-        try {
-            user = userRepo.getReferenceById(id);
-        } catch (Exception e) {
-            return null;
-        }
-        user.setUsername(userDto.getUsername());
-        user.setPassword(encryptPassword(userDto.getPassword()));
-        user.setEmail(userDto.getEmail());
-        user.setRole(userDto.getRole());
+        if (!userDto.getId().equals(id)) return null;
 
-        userRepo.updateUsernameAndPasswordAndEmailByIdAllIgnoreCase(
-                userDto.getUsername(),
-                userDto.getPassword(),
-                userDto.getEmail(),
-                id
-        );
+        userRepo.updateUsernameAndPasswordAndEmailAndPhoneByIdAllIgnoreCase(userDto.getUsername(), encryptPassword(userDto.getPassword()), userDto.getEmail(), userDto.getPhone(), id);
         return mapToDto(userRepo.getReferenceById(id));
     }
 
     @Override
     public String login(UserDto userDto) {
-        final Authentication authentication = authenticationProvider.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        userDto.getUsername(),
-                        userDto.getPassword()
-                )
-        );
+        final Authentication authentication = authenticationProvider
+                .authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final ShopUser user = userRepo.findByUsername(userDto.getUsername());
-        return jwtTokenService.generateToken(mapToDto(user));
+        return jwtService.generateToken(user);
     }
 
     @Override
@@ -101,6 +72,7 @@ public class UserServiceImpl implements UserService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepo.findByUsername(userDetails.getUsername());
     }
+
     @Override
     public UserDto getUserById(Long id) {
         try {
@@ -126,8 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto mapToDto(ShopUser user) {
-        if (user == null)
-            return null;
+        if (user == null) return null;
 
         Long ShopId = user.getShop() != null ? user.getShop().getId() : null;
 
@@ -135,6 +106,7 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .phone(user.getPhone())
                 .email(user.getEmail())
                 .shopId(ShopId)
                 .role(user.getRole())

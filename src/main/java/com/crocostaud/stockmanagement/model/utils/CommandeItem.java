@@ -1,6 +1,5 @@
 package com.crocostaud.stockmanagement.model.utils;
 
-import com.crocostaud.stockmanagement.model.Product;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +22,9 @@ public class CommandeItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**the quantity of ordered {@link Product parts} */
+    /**
+     * the quantity of ordered {@link com.crocostaud.stockmanagement.model.part.Part parts}
+     */
     protected int quantity;
     /** this attribute represent the unitary price of the part excluding the tax (PUHT)*/
     protected double price;

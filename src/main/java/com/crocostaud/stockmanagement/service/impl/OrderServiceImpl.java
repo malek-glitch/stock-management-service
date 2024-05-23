@@ -1,10 +1,10 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.OrderDto;
-import com.crocostaud.stockmanagement.dto.OrderItemDto;
-import com.crocostaud.stockmanagement.model.Order;
-import com.crocostaud.stockmanagement.model.Provider;
-import com.crocostaud.stockmanagement.model.Shop;
+import com.crocostaud.stockmanagement.dto.stock.OrderDto;
+import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
+import com.crocostaud.stockmanagement.model.stock.Order;
+import com.crocostaud.stockmanagement.model.stock.Provider;
+import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.repository.OrderRepository;
 import com.crocostaud.stockmanagement.service.OrderItemService;
 import com.crocostaud.stockmanagement.service.OrderService;

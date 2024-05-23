@@ -1,7 +1,7 @@
 package com.crocostaud.stockmanagement.service;
 
-import com.crocostaud.stockmanagement.dto.OrderDto;
-import com.crocostaud.stockmanagement.dto.OrderItemDto;
+import com.crocostaud.stockmanagement.dto.stock.OrderDto;
+import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
 
 import java.util.List;
 

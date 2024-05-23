@@ -1,7 +1,7 @@
 package com.crocostaud.stockmanagement.service;
 
-import com.crocostaud.stockmanagement.dto.UserDto;
-import com.crocostaud.stockmanagement.model.ShopUser;
+import com.crocostaud.stockmanagement.dto.stock.UserDto;
+import com.crocostaud.stockmanagement.model.stock.ShopUser;
 
 import java.util.List;
 

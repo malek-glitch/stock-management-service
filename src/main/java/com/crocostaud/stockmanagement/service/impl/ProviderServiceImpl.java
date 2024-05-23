@@ -1,8 +1,8 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.ProviderDto;
-import com.crocostaud.stockmanagement.model.Provider;
-import com.crocostaud.stockmanagement.model.Shop;
+import com.crocostaud.stockmanagement.dto.stock.ProviderDto;
+import com.crocostaud.stockmanagement.model.stock.Provider;
+import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.repository.ProviderRepository;
 import com.crocostaud.stockmanagement.service.ProviderService;
 import org.springframework.stereotype.Service;

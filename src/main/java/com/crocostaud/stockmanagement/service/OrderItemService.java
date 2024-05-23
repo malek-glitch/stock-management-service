@@ -1,7 +1,6 @@
 package com.crocostaud.stockmanagement.service;
 
-import com.crocostaud.stockmanagement.dto.OrderItemDto;
-import com.crocostaud.stockmanagement.model.OrderItem;
+import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
 
 public interface OrderItemService {
     OrderItemDto createOrderItem(OrderItemDto orderItemDto);

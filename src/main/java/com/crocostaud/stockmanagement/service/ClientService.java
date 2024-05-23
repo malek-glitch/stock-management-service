@@ -1,7 +1,7 @@
 package com.crocostaud.stockmanagement.service;
 
-import com.crocostaud.stockmanagement.dto.ClientDto;
-import com.crocostaud.stockmanagement.model.Client;
+import com.crocostaud.stockmanagement.dto.stock.ClientDto;
+import com.crocostaud.stockmanagement.model.stock.Client;
 
 public interface ClientService {
     Client getClient(Long id);

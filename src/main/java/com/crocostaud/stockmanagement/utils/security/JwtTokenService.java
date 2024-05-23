@@ -1,6 +1,6 @@
 package com.crocostaud.stockmanagement.utils.security;
 
-import com.crocostaud.stockmanagement.dto.UserDto;
+import com.crocostaud.stockmanagement.dto.stock.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -37,7 +37,11 @@ public class JwtTokenService {
     }
 
     public <T> T getClaims(String token, Function<Claims, T> resolver) {
-        return resolver.apply(Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).getPayload());
+        return resolver.apply(Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload());
     }
 
     public boolean isTokenExpired(String token) {

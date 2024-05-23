@@ -1,10 +1,9 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.ClientDto;
-import com.crocostaud.stockmanagement.model.Client;
+import com.crocostaud.stockmanagement.dto.stock.ClientDto;
+import com.crocostaud.stockmanagement.model.stock.Client;
 import com.crocostaud.stockmanagement.repository.ClientRepository;
 import com.crocostaud.stockmanagement.service.ClientService;
-import jakarta.persistence.Id;
 import org.springframework.stereotype.Service;
 
 @Service

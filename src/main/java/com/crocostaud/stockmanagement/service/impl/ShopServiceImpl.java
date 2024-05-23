@@ -1,7 +1,7 @@
 package com.crocostaud.stockmanagement.service.impl;
 
-import com.crocostaud.stockmanagement.dto.ShopDto;
-import com.crocostaud.stockmanagement.model.*;
+import com.crocostaud.stockmanagement.dto.stock.ShopDto;
+import com.crocostaud.stockmanagement.model.stock.*;
 import com.crocostaud.stockmanagement.repository.ShopRepository;
 import com.crocostaud.stockmanagement.service.ShopService;
 import com.crocostaud.stockmanagement.utils.security.Auth;
