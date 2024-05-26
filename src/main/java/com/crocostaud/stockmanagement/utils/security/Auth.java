@@ -4,8 +4,10 @@ import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.repository.UserRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Component
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class Auth {
 
     private final UserRepository userRepo;
