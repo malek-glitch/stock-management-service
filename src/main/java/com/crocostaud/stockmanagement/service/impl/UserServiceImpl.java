@@ -5,6 +5,7 @@ import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.repository.UserRepository;
 import com.crocostaud.stockmanagement.service.UserService;
+import com.crocostaud.stockmanagement.utils.security.Token;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,12 +60,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserDto userDto) {
+    public Token login(UserDto userDto) {
         final Authentication authentication = authenticationProvider
                 .authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final ShopUser user = userRepo.findByUsername(userDto.getUsername());
-        return jwtService.generateToken(user);
+        return new Token(jwtService.generateToken(user),null);
     }
 
     @Override

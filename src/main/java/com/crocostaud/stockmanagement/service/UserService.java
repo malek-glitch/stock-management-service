@@ -2,6 +2,7 @@ package com.crocostaud.stockmanagement.service;
 
 import com.crocostaud.stockmanagement.dto.stock.UserDto;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
+import com.crocostaud.stockmanagement.utils.security.Token;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface UserService {
 
     UserDto updateUser(UserDto userDto, Long id);
 
-    String login(UserDto userDto);
+    Token login(UserDto userDto);
 
     ShopUser getUser();
 
