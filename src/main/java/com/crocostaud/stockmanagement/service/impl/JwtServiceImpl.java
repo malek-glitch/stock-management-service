@@ -37,7 +37,7 @@ public class JwtServiceImpl implements JwtService {
     public String generateToken(ShopUser user) {
         return Jwts.builder()
                 .subject(user.getUsername())
-                .claim("role", user.getRole())
+                .claim("roles", user.getRole())
                 .claim("email", user.getEmail())
                 .claim("phone", user.getPhone())
                 .claim("password", user.getPassword())
