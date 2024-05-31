@@ -38,7 +38,9 @@ public class Controller {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserDto userDto) {
+    public ResponseEntity<Token> login(@RequestBody UserDto userDto) {
+        System.out.println("________________________________________________");
+        System.out.println((userDto.getUsername() + " " + userDto.getPassword()));
         return ResponseEntity.ok(userService.login(userDto));
     }
 
