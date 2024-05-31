@@ -1,11 +1,12 @@
 package com.crocostaud.stockmanagement.dto.part;
 
+import com.crocostaud.stockmanagement.model.part.Original;
 import lombok.*;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link com.crocostaud.stockmanagement.model.part.OriginalPart}
+ * DTO for {@link Original}
  */
 @AllArgsConstructor
 @Getter

@@ -21,6 +21,7 @@ public class Part {
     private Long id;
     private String ref;
     private String name;
+    @Column(name = "imageUrl")
     private String imageUrl;
 
     @ManyToOne
@@ -30,11 +31,8 @@ public class Part {
     @OneToMany(mappedBy = "part")
     private Set<Description> descriptions;
 
-    @ManyToMany
-    @JoinTable(name = "Part_original",
-            joinColumns = @JoinColumn(name = "part_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "orignal_part_oem", referencedColumnName = "oem"))
-    private Set<OriginalPart> oems;
+    @ManyToMany(mappedBy = "parts")
+    private Set<Original> originals;
 
     @ManyToOne
     @JoinColumn(name = "suppliers_name")
@@ -44,14 +42,13 @@ public class Part {
     private Set<Inventory> inventories = new LinkedHashSet<>();
 
     public Part() {
-        oems = new HashSet<>();
+        originals = new HashSet<>();
         descriptions = new HashSet<>();
     }
 
     public Part(Long id) {
         this.id = id;
     }
-
     public PartDto toDTO() {
         return PartDto.builder()
                 .id(id)

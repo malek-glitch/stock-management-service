@@ -18,9 +18,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Entity(name = "users")
 @AllArgsConstructor
 @ToString
+@Entity(name = "users")
 public class ShopUser implements UserDetails {
 
     @Id

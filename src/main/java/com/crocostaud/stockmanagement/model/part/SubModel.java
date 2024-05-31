@@ -29,7 +29,7 @@ public class SubModel {
 
 
 //    @ManyToMany(mappedBy = "compatibleVehicle")
-//    private Set<OriginalPart> originalParts;
+//    private Set<Original> originalParts;
 
 
     @Override

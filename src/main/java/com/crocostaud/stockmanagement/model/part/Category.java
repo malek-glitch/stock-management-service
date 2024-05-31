@@ -21,12 +21,8 @@ public class Category {
     private String name;
     private String description;
 
-    @OneToMany
+    @OneToMany(mappedBy = "category")
     private Set<Part> parts;
-
-    public Category(Long categoryId) {
-        this.id = categoryId;
-    }
 
     @Override
     public String toString() {
