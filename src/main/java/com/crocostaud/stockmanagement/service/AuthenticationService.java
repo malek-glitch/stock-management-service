@@ -2,10 +2,11 @@ package com.crocostaud.stockmanagement.service;
 
 
 import com.crocostaud.stockmanagement.dto.stock.UserDto;
+import com.crocostaud.stockmanagement.utils.security.Token;
 
 public interface AuthenticationService {
-    String signup(UserDto request);
+    Token register(UserDto request);
 
-    String signin(UserDto request);
+    Token login(UserDto request);
 }
 

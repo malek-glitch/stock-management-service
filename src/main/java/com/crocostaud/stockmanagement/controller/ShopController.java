@@ -29,7 +29,7 @@ public class ShopController {
     public ResponseEntity<ShopDto> create(@RequestBody ShopDto shopDto, @Username String username) {
         ShopUser user = auth.getUser(username);
         if (user == null || user.getShop() != null) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(405)).build();
+            return ResponseEntity.badRequest().build();
         }
         ShopDto savedShop = shopService.createShop(shopDto);
         userService.setShop(user.getId(), savedShop.getId());

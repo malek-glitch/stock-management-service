@@ -49,9 +49,9 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     @Override
-    public ProviderDto getProvider(Long id) {
+    public Provider getProvider(Long id) {
         Optional<Provider> providerOptional = providerRepo.findById(id);
-        return providerOptional.map(this::mapToDto).orElse(null);
+        return providerOptional.orElse(null);
     }
 
     @Override

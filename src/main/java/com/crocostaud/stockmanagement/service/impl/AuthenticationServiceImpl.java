@@ -6,6 +6,7 @@ import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.AuthenticationService;
 import com.crocostaud.stockmanagement.service.JwtService;
 import com.crocostaud.stockmanagement.service.UserService;
+import com.crocostaud.stockmanagement.utils.security.Token;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,8 +30,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String signup(UserDto request) {
-        UserDto user = userService.createUser(request);
+    public Token register(UserDto request) {
+        UserDto user = userService.createUser(request, null);
         ShopUser userDetails = ShopUser.builder()
                 .username(user.getUsername())
                 .password(passwordEncoder.encode(user.getPassword()))
@@ -38,16 +39,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(user.getRole())
                 .shop(new Shop(user.getShopId()))
                 .build();
-        return jwtService.generateToken(userDetails);
+
+        return new Token(jwtService.generateToken(userDetails), "TODO add refresh token");
     }
 
     @Override
-    public String signin(UserDto request) {
+    public Token login(UserDto request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
         var user = userDetailsService.loadUserByUsername(request.getUsername());
         if (user == null)
-            return "Invalid username or password";
+            return null;
         ShopUser userDetails = ShopUser.builder()
                 .username(user.getUsername())
                 .password(passwordEncoder.encode(user.getPassword()))
@@ -55,6 +58,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(request.getRole())
                 .shop(new Shop(request.getShopId()))
                 .build();
-        return jwtService.generateToken(userDetails);
+        return new Token(jwtService.generateToken(userDetails), "TODO add refresh token");
     }
 }

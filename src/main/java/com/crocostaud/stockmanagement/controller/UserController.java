@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     private final UserService userService;
     private final Auth auth;
 
@@ -27,19 +26,20 @@ public class UserController {
         this.auth = auth;
     }
 
-
     @PostMapping("/add")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
-        System.out.println(user);
-        UserDto savedUser = null;
-        try {
-            savedUser = userService.createUser(user);
-        } catch (RuntimeException e) {
-            if (e.getCause().getMessage().contains("Duplicate entry")) {
-                throw e;
-            }
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user, @Username String username) {
+        ShopUser authUser = auth.getUser(username);
+        if (authUser == null || authUser.getShop() == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
-        return ResponseEntity.ok().body(savedUser);
+
+        UserDto savedUser;
+        try {
+            savedUser = userService.createUser(user, authUser.getShop().getId());
+            return ResponseEntity.ok().body(savedUser);
+        } catch (RuntimeException ignore) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
     }
 
     @GetMapping

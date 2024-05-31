@@ -44,6 +44,8 @@ public class SearchController {
             return ResponseEntity.ok(searchService.searchBySubmodel(search.submodelId()));
         if (search.modelId() != null)
             return ResponseEntity.ok(searchService.searchByModel(search.modelId()));
+        if (!isTextEmpty(search))
+            return ResponseEntity.ok(searchService.searchByText(search.text()));
 
         return ResponseEntity.noContent().build();
     }

@@ -2,6 +2,7 @@ package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.stock.UserDto;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
+import com.crocostaud.stockmanagement.service.AuthenticationService;
 import com.crocostaud.stockmanagement.service.UserService;
 import com.crocostaud.stockmanagement.utils.annotation.Username;
 import com.crocostaud.stockmanagement.utils.security.Auth;
@@ -15,10 +16,12 @@ public class Controller {
 
     private final Auth auth;
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
-    public Controller(Auth auth, UserService userService) {
+    public Controller(Auth auth, UserService userService, AuthenticationService authenticationService) {
         this.auth = auth;
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
 
@@ -40,14 +43,12 @@ public class Controller {
 
     @PostMapping("/login")
     public ResponseEntity<Token> login(@RequestBody UserDto userDto) {
-        System.out.println("________________________________________________");
-        System.out.println((userDto.getUsername() + " " + userDto.getPassword()));
-        return ResponseEntity.ok(userService.login(userDto));
+        return ResponseEntity.ok(authenticationService.login(userDto));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.createUser(userDto));
+    public ResponseEntity<Token> register(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(authenticationService.register(userDto));
     }
 
     @GetMapping("/home")

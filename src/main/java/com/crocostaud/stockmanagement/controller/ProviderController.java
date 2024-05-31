@@ -1,6 +1,7 @@
 package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.stock.ProviderDto;
+import com.crocostaud.stockmanagement.model.stock.Provider;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.ProviderService;
 import com.crocostaud.stockmanagement.utils.annotation.Username;
@@ -25,6 +26,26 @@ public class ProviderController {
         this.auth = auth;
     }
 
+    @GetMapping
+    ResponseEntity<Iterable<ProviderDto>> getAll(@Username String username) {
+        ShopUser user = auth.getUser(username);
+        if (user == null || user.getShop() == null)
+            return ResponseEntity.noContent().build();
+        List<ProviderDto> allProviders = providerService.getAllProviders(user.getShop().getId());
+        return ResponseEntity.ok(allProviders);
+    }
+
+    @GetMapping("/{providerId}")
+    public ResponseEntity<Provider> get(@PathVariable Long providerId, @Username String username) {
+        ShopUser user = auth.getUser(username);
+        Provider provider = providerService.getProvider(providerId);
+
+        if (provider == null || user.getShop() == null || !Objects.equals(provider.getShop().getId(), user.getShop().getId()))
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(provider);
+    }
+
     @PostMapping
     public ResponseEntity<ProviderDto> create(@RequestBody ProviderDto providerDto, @Username String username) {
         ShopUser user = auth.getUser(username);
@@ -35,24 +56,14 @@ public class ProviderController {
         return ResponseEntity.ok(provider);
     }
 
-    @GetMapping("/{providerId}")
-    public ResponseEntity<ProviderDto> get(@PathVariable Long providerId, @Username String username) {
-        ShopUser user = auth.getUser(username);
-        ProviderDto provider = providerService.getProvider(providerId);
-
-        if (provider == null || user.getShop() == null || !Objects.equals(provider.getShopId(), user.getShop().getId()))
-            return ResponseEntity.noContent().build();
-
-        return ResponseEntity.ok(provider);
-    }
-
-    @GetMapping
-    ResponseEntity<Iterable<ProviderDto>> getAll(@Username String username) {
+    @PutMapping("/{providerId}")
+    ResponseEntity<ProviderDto> update(@PathVariable Long providerId, @RequestBody ProviderDto providerDto, @Username String username) {
         ShopUser user = auth.getUser(username);
         if (user == null || user.getShop() == null)
-            return ResponseEntity.noContent().build();
-        List<ProviderDto> allProviders = providerService.getAllProviders(user.getShop().getId());
-        return ResponseEntity.ok(allProviders);
+            return ResponseEntity.badRequest().build();
+        if (!Objects.equals(providerDto.getShopId(), user.getShop().getId()))
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(providerService.updateProvider(providerDto, providerId));
     }
 
 

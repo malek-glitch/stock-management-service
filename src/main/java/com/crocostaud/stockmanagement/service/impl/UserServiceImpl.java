@@ -6,6 +6,7 @@ import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.repository.UserRepository;
 import com.crocostaud.stockmanagement.service.UserService;
 import com.crocostaud.stockmanagement.utils.security.Token;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,18 +39,26 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto createUser(UserDto userDto) {
-        ShopUser user = ShopUser.builder().username(userDto.getUsername()).password(encryptPassword(userDto.getPassword())).email(userDto.getEmail()).role(userDto.getRole()).build();
+    public UserDto createUser(UserDto userDto, Long ShopId) {
+        ShopUser user = ShopUser.builder()
+                .username(userDto.getUsername())
+                .password(encryptPassword(userDto.getPassword()))
+                .email(userDto.getEmail())
+                .build();
+        if (ShopId != null) {
+            user.setShop(new Shop(ShopId));
+            user.setRole("ROLE_USER");
+        } else {
+            user.setRole("ROLE_ADMIN");
+        }
 
-        if (userDto.getShopId() != null) user.setShop(new Shop(userDto.getShopId()));
-
-        ShopUser savedUser = null;
+        ShopUser savedUser;
         try {
             savedUser = userRepo.save(user);
+            return mapToDto(savedUser);
         } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401));
         }
-        return mapToDto(savedUser);
     }
 
     @Override

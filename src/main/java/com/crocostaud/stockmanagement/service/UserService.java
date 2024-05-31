@@ -7,7 +7,7 @@ import com.crocostaud.stockmanagement.utils.security.Token;
 import java.util.List;
 
 public interface UserService {
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(UserDto userDto, Long ShopId);
 
     UserDto updateUser(UserDto userDto, Long id);
 
