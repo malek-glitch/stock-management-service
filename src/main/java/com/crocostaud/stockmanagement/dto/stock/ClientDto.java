@@ -15,4 +15,6 @@ public class ClientDto implements Serializable {
     Long id;
     String name;
     String phone;
+    String email;
+    Long shopId;
 }

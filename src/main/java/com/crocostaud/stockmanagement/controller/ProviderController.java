@@ -7,8 +7,10 @@ import com.crocostaud.stockmanagement.service.ProviderService;
 import com.crocostaud.stockmanagement.utils.annotation.Username;
 import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -64,6 +66,18 @@ public class ProviderController {
         if (!Objects.equals(providerDto.getShopId(), user.getShop().getId()))
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(providerService.updateProvider(providerDto, providerId));
+    }
+
+    @DeleteMapping("/providerId")
+    ResponseEntity<ProviderDto> delete(@PathVariable Long providerId, @Username String username) {
+        ShopUser user = auth.getUser(username);
+        if (user == null || user.getShop() == null)
+            return ResponseEntity.badRequest().build();
+        Provider provider = providerService.getProvider(providerId);
+        if (provider == null || !Objects.equals(provider.getShop().getId(), user.getShop().getId()))
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Unauthorized");
+        providerService.removeProvider(providerId);
+        return ResponseEntity.noContent().build();
     }
 
 

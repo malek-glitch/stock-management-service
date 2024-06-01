@@ -21,10 +21,8 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
-    private String city;
+    private String address;
 
     @Override
     public final boolean equals(Object o) {

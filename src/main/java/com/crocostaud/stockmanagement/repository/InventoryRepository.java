@@ -23,4 +23,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     void updateInventory(int quantityAvailable, int minimumStockQuantity, Double price, int tva, Warehouse warehouse, Long id);
 
     List<Inventory> getInventoriesByShopId(Long shop_id);
+
+    @Query("select i from Inventory i where i.part.id = ?1 and i.shop.id = ?2 and i.price = ?3")
+    Inventory findByPart_IdAndShop_IdAndPrice(Long partId, Long shopId, Double price);
 }

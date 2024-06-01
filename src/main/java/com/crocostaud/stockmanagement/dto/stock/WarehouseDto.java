@@ -14,4 +14,6 @@ import java.io.Serializable;
 public class WarehouseDto implements Serializable {
     Long id;
     String name;
+    String locationName;
+    String locationAddress;
 }

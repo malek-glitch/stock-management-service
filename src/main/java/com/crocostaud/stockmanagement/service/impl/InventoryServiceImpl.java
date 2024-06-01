@@ -2,6 +2,7 @@ package com.crocostaud.stockmanagement.service.impl;
 
 import com.crocostaud.stockmanagement.dto.part.PartDto;
 import com.crocostaud.stockmanagement.dto.stock.InventoryDto;
+import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
 import com.crocostaud.stockmanagement.model.part.Part;
 import com.crocostaud.stockmanagement.model.stock.Inventory;
 import com.crocostaud.stockmanagement.model.stock.Shop;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Service
 public class InventoryServiceImpl implements InventoryService {
 
+    private static final int DEFAULT_MINIMUM_STOCK = 1;
     private final InventoryRepository inventoryRepo;
 //    private final PartRepository partRepo;
 
@@ -63,6 +65,25 @@ public class InventoryServiceImpl implements InventoryService {
 
         Inventory savedInventory = inventoryRepo.save(inventory);
         return mapToDto(savedInventory);
+    }
+
+    @Override
+    public InventoryDto createInventory(OrderItemDto orderItemDto, Long shopId) {
+        Inventory inventory = inventoryRepo.findByPart_IdAndShop_IdAndPrice(orderItemDto.getPartId(), shopId, orderItemDto.getPrice());
+        if (inventory == null) {
+            Inventory newInventory = new Inventory(
+                    null,
+                    orderItemDto.getQuantity(),
+                    DEFAULT_MINIMUM_STOCK,
+                    orderItemDto.getPrice(),
+                    orderItemDto.getTVA(),
+                    new Part(orderItemDto.getPartId()),
+                    new Shop(shopId),
+                    new Warehouse()
+            );
+        }
+
+        return null;
     }
 
     @Override

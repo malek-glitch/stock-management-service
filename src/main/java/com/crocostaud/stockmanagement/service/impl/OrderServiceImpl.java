@@ -32,7 +32,8 @@ public class OrderServiceImpl implements OrderService {
                 .totalPrice(calculateTotalPrice(orderItems))
                 .paidAmount(orderDto.getPaidAmount())
                 .discount(orderDto.getDiscount())
-                .date(LocalDateTime.now()).build();
+                .date(LocalDateTime.now())
+                .build();
         Order savedOrder = orderRepo.save(order);
         addItemsToOrder(orderItems, order.getId());
         return mapToDto(savedOrder);

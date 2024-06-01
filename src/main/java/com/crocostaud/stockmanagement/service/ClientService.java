@@ -1,13 +1,14 @@
 package com.crocostaud.stockmanagement.service;
 
 import com.crocostaud.stockmanagement.dto.stock.ClientDto;
-import com.crocostaud.stockmanagement.model.stock.Client;
 
 public interface ClientService {
-    Client getClient(Long id);
-    ClientDto createClient(ClientDto clientDto);
+    ClientDto getClient(Long id);
+
+    ClientDto createClient(ClientDto clientDto, Long shopId);
     ClientDto updateClient(ClientDto clientDto, Long id);
-    void removeClient(Long clientId);
 
+    void removeClient(Long clientId, Long shopId);
 
+    Iterable<ClientDto> getClients(Long shopId);
 }

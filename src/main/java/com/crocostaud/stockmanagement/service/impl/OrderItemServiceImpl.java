@@ -5,22 +5,29 @@ import com.crocostaud.stockmanagement.model.part.Part;
 import com.crocostaud.stockmanagement.model.stock.Order;
 import com.crocostaud.stockmanagement.model.stock.OrderItem;
 import com.crocostaud.stockmanagement.repository.OrderItemRepository;
+import com.crocostaud.stockmanagement.service.InventoryService;
 import com.crocostaud.stockmanagement.service.OrderItemService;
+import com.crocostaud.stockmanagement.service.PartService;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
     private final OrderItemRepository orderItemRepo;
+    private final PartService partService;
+    private final InventoryService inventoryService;
 
-    public OrderItemServiceImpl(OrderItemRepository orderItemRepo) {
+    public OrderItemServiceImpl(OrderItemRepository orderItemRepo, PartService partService, InventoryService inventoryService) {
         this.orderItemRepo = orderItemRepo;
-
+        this.partService = partService;
+        this.inventoryService = inventoryService;
     }
 
     @Override
     public OrderItemDto createOrderItem(OrderItemDto orderItemDto) {
-        Part part = null;
+        Part part = partService.getPart(orderItemDto.getPartId());
+        if (part == null)
+            return null;
 
         OrderItem orderItem = OrderItem.builder()
                 .part(part)
@@ -31,6 +38,8 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .discount(orderItemDto.getDiscount())
                 .build();
         OrderItem savedOrderItem = orderItemRepo.save(orderItem);
+        // TODO add shop id to this method
+        inventoryService.createInventory(orderItemDto, 1L);
         return mapToDto(savedOrderItem);
     }
 

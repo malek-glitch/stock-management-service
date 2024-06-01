@@ -9,12 +9,12 @@ import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
 @RequestMapping("/shop")
 public class ShopController {
-
     private final ShopService shopService;
     private final UserService userService;
     private final Auth auth;
@@ -39,13 +39,13 @@ public class ShopController {
     @PutMapping
     public ResponseEntity<ShopDto> update(@RequestBody ShopDto shopDto, @Username String username) {
         ShopUser user = auth.getUser(username);
-        System.out.println(username + "  -> " + user);
-        if (user == null || user.getShop() == null) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(400)).build();
-        }
+
+        if (user == null || user.getShop() == null || user.getShop().getId() == null)
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "User not found");
+
 
         if (!user.getShop().getId().equals(shopDto.getId()))
-            return ResponseEntity.status(HttpStatusCode.valueOf(400)).build();
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Shop not found");
 
         ShopDto updatedShop = shopService.updateShop(shopDto, user.getShop().getId());
         return ResponseEntity.ok(updatedShop);

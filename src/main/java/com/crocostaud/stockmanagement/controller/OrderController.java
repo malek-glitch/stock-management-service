@@ -8,7 +8,6 @@ import com.crocostaud.stockmanagement.service.OrderService;
 import com.crocostaud.stockmanagement.utils.annotation.Username;
 import com.crocostaud.stockmanagement.utils.request.OrderRequest;
 import com.crocostaud.stockmanagement.utils.security.Auth;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,6 @@ public class OrderController {
     private final OrderService orderService;
     private final Auth auth;
 
-    @Autowired
     public OrderController(OrderService orderService, Auth auth) {
         this.orderService = orderService;
         this.auth = auth;
