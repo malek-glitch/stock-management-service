@@ -13,8 +13,9 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Builder
-public class InventoryDto implements Serializable {
+public final class InventoryDto implements Serializable {
     private Long id;
+    private String partName;
     private int quantityAvailable;
     private int minimumStockQuantity;
     private Double price;

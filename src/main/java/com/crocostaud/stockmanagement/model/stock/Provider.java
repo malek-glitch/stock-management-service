@@ -21,6 +21,7 @@ public class Provider {
     private String name;
     private String email;
     private String phone;
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")

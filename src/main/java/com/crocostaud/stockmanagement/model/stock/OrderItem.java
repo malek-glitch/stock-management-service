@@ -3,7 +3,9 @@ package com.crocostaud.stockmanagement.model.stock;
 
 import com.crocostaud.stockmanagement.model.part.Part;
 import com.crocostaud.stockmanagement.model.utils.CommandeItem;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,9 +24,6 @@ import java.util.Objects;
 @Entity(name = "order_item")
 public class OrderItem extends CommandeItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @ManyToOne
     @JoinColumn(name = "part_id")
     private Part part;

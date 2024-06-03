@@ -3,8 +3,7 @@ package com.crocostaud.stockmanagement.controller;
 import com.crocostaud.stockmanagement.dto.stock.UserDto;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.UserService;
-import com.crocostaud.stockmanagement.utils.annotation.Username;
-import com.crocostaud.stockmanagement.utils.security.Auth;
+import com.crocostaud.stockmanagement.utils.annotation.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,24 +17,20 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-    private final Auth auth;
+
 
     @Autowired
-    public UserController(UserService userService, Auth auth) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.auth = auth;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user, @Username String username) {
-        ShopUser authUser = auth.getUser(username);
-        if (authUser == null || authUser.getShop() == null) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user, @User ShopUser authUser) {
+        if (authUser == null || authUser.getShop() == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
 
-        UserDto savedUser;
         try {
-            savedUser = userService.createUser(user, authUser.getShop().getId());
+            UserDto savedUser = userService.createUser(user, authUser.getShop().getId());
             return ResponseEntity.ok().body(savedUser);
         } catch (RuntimeException ignore) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
@@ -48,22 +43,21 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long userId, @Username String username) {
-        long id = auth.getUser(username) == null ? -1 : auth.getUser(username).getId();
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId, @User ShopUser user) {
+        long id = user.getId();
 
         if (userId != id) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User id not match");
         }
 
-        UserDto user = userService.getUserById(userId);
-        if (user == null)
+        UserDto userDto = userService.getUserById(userId);
+        if (userDto == null)
             return ResponseEntity.noContent().build();
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(userDto);
     }
 
     @PutMapping
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user) {
-        ShopUser authUser = auth.getUser(user.getUsername());
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user, @User ShopUser authUser) {
         if (authUser == null)
             return ResponseEntity.noContent().build();
         long id = authUser.getId();

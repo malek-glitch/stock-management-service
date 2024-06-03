@@ -11,12 +11,11 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class ProviderDto {
+public final class ProviderDto {
     Long id;
     String name;
     String email;
     String phone;
-
+    String address;
     Long shopId;
-
 }

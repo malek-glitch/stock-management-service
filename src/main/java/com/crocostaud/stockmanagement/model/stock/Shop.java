@@ -41,7 +41,7 @@ public class Shop {
     private Set<Client> clients = new LinkedHashSet<>();
 
     /** this field represent the {@link Order orders} made by the shop to a {@link Provider}*/
-    @OneToMany(mappedBy = "shop")
+    @OneToMany(mappedBy = "shop", orphanRemoval = true)
     @Builder.Default
     private Set<Order> orders = new LinkedHashSet<>();
 
@@ -53,12 +53,12 @@ public class Shop {
     /**the list of {@link Inventory inventories} of the {@link Shop}
      * where each {@link Inventory} represent the relation between a {@link com.crocostaud.stockmanagement.model.part.Part} and the {@link Warehouse}
      *( <em> in short it represent where and how many of a certain {@link com.crocostaud.stockmanagement.model.part.Part} are stored </em> )*/
-    @OneToMany(mappedBy = "shop")
+    @OneToMany(mappedBy = "shop", orphanRemoval = true)
     @Builder.Default
     private Set<Inventory> inventories = new LinkedHashSet<>();
 
     /**this field represent the list Of {@link Sell sells} made by the {@link Shop} to the {@link Client clients}*/
-    @OneToMany(mappedBy = "shop")
+    @OneToMany(mappedBy = "shop", orphanRemoval = true)
     @Builder.Default
     private Set<Sell> sells = new LinkedHashSet<>();
 

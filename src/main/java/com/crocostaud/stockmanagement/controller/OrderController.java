@@ -5,11 +5,12 @@ import com.crocostaud.stockmanagement.dto.stock.OrderDto;
 import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.OrderService;
-import com.crocostaud.stockmanagement.utils.annotation.Username;
+import com.crocostaud.stockmanagement.utils.annotation.User;
 import com.crocostaud.stockmanagement.utils.request.OrderRequest;
-import com.crocostaud.stockmanagement.utils.security.Auth;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,57 +18,62 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/order")
 public class OrderController {
-
     private final OrderService orderService;
-    private final Auth auth;
 
-    public OrderController(OrderService orderService, Auth auth) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.auth = auth;
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderRequest> get(@PathVariable Long orderId, @User ShopUser user) {
+
+        if (user == null || user.getShop() == null)
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "unauthorized");
+        OrderDto order = orderService.getOrder(orderId);
+        if (order == null || !Objects.equals(order.getShopId(), user.getShop().getId()))
+            return ResponseEntity.noContent().build();
+        List<OrderItemDto> items = orderService.getOrderItems(orderId);
+        OrderRequest orderRequest = new OrderRequest(order, items);
+
+        return ResponseEntity.ok(orderRequest);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderDto>> getOrders(@User ShopUser user) {
+        System.out.println(user);
+        if (user == null || user.getShop() == null)
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Unauthorized");
+        List<OrderDto> orders = orderService.getOrders(user.getShop().getId());
+        return ResponseEntity.ok(orders);
     }
 
     @PostMapping
-    public ResponseEntity<OrderDto> create(@RequestBody OrderRequest orderRequest, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    public ResponseEntity<OrderDto> create(@RequestBody OrderRequest orderRequest, @User ShopUser user) {
         if (user == null || user.getShop() == null)
-            return ResponseEntity.badRequest().build();
-        orderRequest.getOrderDto().setShopId(user.getShop().getId());
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Unauthorized");
+        orderRequest.orderDto().setShopId(user.getShop().getId());
         OrderDto savedOrder =
                 orderService.createOrder(
-                        orderRequest.getOrderDto(),
-                        orderRequest.getOrderItems()
+                        orderRequest.orderDto(),
+                        orderRequest.orderItems()
                 );
         return ResponseEntity.ok(savedOrder);
     }
 
     @PostMapping("/{orderId}/add_items")
-    ResponseEntity<Void> addOrderItem(@PathVariable Long orderId, @RequestBody List<OrderItemDto> itemsDto, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    ResponseEntity<Void> addOrderItem(@PathVariable Long orderId, @RequestBody List<OrderItemDto> itemsDto, @User ShopUser user) {
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
         OrderDto order = orderService.getOrder(orderId);
         if (order == null || !Objects.equals(order.getShopId(), user.getShop().getId()))
             return ResponseEntity.noContent().build();
 
-        orderService.addItemsToOrder(itemsDto, orderId);
+        orderService.addItemsToOrder(itemsDto, orderId, user.getShop().getId());
         return ResponseEntity.ok().build();
-    }
-    
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto> get(@PathVariable Long orderId, @Username String username) {
-        ShopUser user = auth.getUser(username);
-        if (user == null || user.getShop() == null)
-            return ResponseEntity.badRequest().build();
-        OrderDto order = orderService.getOrder(orderId);
-        if (order == null || !Objects.equals(order.getShopId(), user.getShop().getId()))
-            return ResponseEntity.noContent().build();
-
-        return ResponseEntity.ok(order);
     }
 
     @DeleteMapping("/{orderId}")
-    ResponseEntity<Void> delete(@PathVariable Long orderId, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    ResponseEntity<Void> delete(@PathVariable Long orderId, @User ShopUser user) {
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
         OrderDto order = orderService.getOrder(orderId);
@@ -76,6 +82,7 @@ public class OrderController {
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok().build();
     }
+
 
 }
 

@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Builder
 @Getter
-public class ShopDto implements Serializable {
+public final class ShopDto implements Serializable {
     @Setter
     Long id;
     String name;

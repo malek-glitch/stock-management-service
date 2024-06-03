@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class OrderDto implements Serializable {
+public final class OrderDto implements Serializable {
 
     private final Long id;
     private LocalDateTime date;

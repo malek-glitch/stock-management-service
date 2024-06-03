@@ -33,7 +33,7 @@ public class Order extends Commande {
     @JoinColumn(name = "provider_id")
     private Provider provider;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", orphanRemoval = true)
     @ToString.Exclude
     private Set<OrderItem> items;
 

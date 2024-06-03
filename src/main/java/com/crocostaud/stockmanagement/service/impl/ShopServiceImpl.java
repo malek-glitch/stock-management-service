@@ -1,9 +1,11 @@
 package com.crocostaud.stockmanagement.service.impl;
 
 import com.crocostaud.stockmanagement.dto.stock.ShopDto;
+import com.crocostaud.stockmanagement.dto.stock.WarehouseDto;
 import com.crocostaud.stockmanagement.model.stock.*;
 import com.crocostaud.stockmanagement.repository.ShopRepository;
 import com.crocostaud.stockmanagement.service.ShopService;
+import com.crocostaud.stockmanagement.service.WarehouseService;
 import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.stereotype.Service;
 
@@ -12,29 +14,32 @@ import java.util.Optional;
 @Service
 public class ShopServiceImpl implements ShopService {
 
-    private final ShopRepository shopRepos;
+    private final ShopRepository shopRepo;
     private final Auth auth;
+    private final WarehouseService warehouseService;
 
-    public ShopServiceImpl(ShopRepository shopRepos, Auth auth) {
-        this.shopRepos = shopRepos;
+    public ShopServiceImpl(ShopRepository shopRepos, Auth auth, WarehouseService warehouseService) {
+        this.shopRepo = shopRepos;
         this.auth = auth;
+        this.warehouseService = warehouseService;
     }
 
     @Override
-    public ShopDto createShop(ShopDto shopDto) {
+    public ShopDto createShop(ShopDto shopDto, WarehouseDto warehouseDto) {
         Shop shop = Shop.builder()
                 .name(shopDto.getName())
                 .email(shopDto.getEmail())
                 .phoneNumbers(shopDto.getPhone())
                 .build();
 
-        Shop savedShop = shopRepos.save(shop);
+        Shop savedShop = shopRepo.save(shop);
+        warehouseService.createWarehouse(warehouseDto, savedShop.getId(), true);
         return mapToDto(savedShop);
     }
 
     @Override
     public ShopDto getShop(Long shopId) {
-        Optional<Shop> shop = shopRepos.findById(shopId);
+        Optional<Shop> shop = shopRepo.findById(shopId);
         return shop.map(this::mapToDto).orElse(null);
     }
 
@@ -46,23 +51,19 @@ public class ShopServiceImpl implements ShopService {
         return mapToDto(shop);
     }
 
-    private ShopDto mapToDto(Shop shop) {
-        return ShopDto.builder()
-                .id(shop.getId())
-                .name(shop.getName())
-                .email(shop.getEmail())
-                .phone(shop.getPhoneNumbers())
-                .build();
+    @Override
+    public WarehouseDto getDefaultWarehouse(Long shopId) {
+        return warehouseService.getDefaultWarehouse(shopId);
     }
 
 
     @Override
     public ShopDto updateShop(ShopDto shopDto, Long id) {
-        Optional<Shop> shopOptional = shopRepos.findById(id);
+        Optional<Shop> shopOptional = shopRepo.findById(id);
         if (shopOptional.isEmpty())
             return null;
-        shopRepos.updateNameAndEmailAndPhoneNumbersById(id, shopDto.getName(), shopDto.getEmail(), shopDto.getPhone());
-        return mapToDto(shopRepos.findById(id).get());
+        shopRepo.updateNameAndEmailAndPhoneNumbersById(id, shopDto.getName(), shopDto.getEmail(), shopDto.getPhone());
+        return mapToDto(shopRepo.findById(id).get());
     }
 
     @Override
@@ -98,7 +99,16 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public ShopDto delete(Long shopId) {
         ShopDto shopDto = getShop(shopId);
-        shopRepos.deleteById(shopId);
+        shopRepo.deleteById(shopId);
         return shopDto;
+    }
+
+    private ShopDto mapToDto(Shop shop) {
+        return ShopDto.builder()
+                .id(shop.getId())
+                .name(shop.getName())
+                .email(shop.getEmail())
+                .phone(shop.getPhoneNumbers())
+                .build();
     }
 }

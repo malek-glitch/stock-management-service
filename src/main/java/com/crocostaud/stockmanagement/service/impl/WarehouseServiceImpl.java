@@ -1,8 +1,11 @@
 package com.crocostaud.stockmanagement.service.impl;
 
 import com.crocostaud.stockmanagement.dto.stock.WarehouseDto;
+import com.crocostaud.stockmanagement.model.stock.Location;
+import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.model.stock.Warehouse;
 import com.crocostaud.stockmanagement.repository.WarehouseRepository;
+import com.crocostaud.stockmanagement.service.LocationService;
 import com.crocostaud.stockmanagement.service.WarehouseService;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +15,42 @@ import java.util.List;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepo;
+    private final LocationService locationService;
 
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepo) {
+    public WarehouseServiceImpl(WarehouseRepository warehouseRepo, LocationService locationService) {
         this.warehouseRepo = warehouseRepo;
+        this.locationService = locationService;
     }
 
     @Override
     public WarehouseDto createWarehouse(WarehouseDto warehouseDto, Long shopId) {
-        return null;
+        return createWarehouse(warehouseDto, shopId, false);
     }
+
+    @Override
+    public WarehouseDto createWarehouse(WarehouseDto warehouseDto, Long shopId, boolean isDefault) {
+        Location location = locationService.createLocation(warehouseDto.getLocationName(), warehouseDto.getLocationAddress());
+        Warehouse warehouse = Warehouse.builder()
+                .name(warehouseDto.getName())
+                .location(location)
+                .shop(new Shop(shopId))
+                .isDefault(isDefault)
+                .build();
+        Warehouse saved = warehouseRepo.save(warehouse);
+
+        return maToDto(saved);
+    }
+
+
 
     @Override
     public WarehouseDto updateWarehouse(WarehouseDto warehouseDto, Long shopId) {
         return null;
+    }
+
+    @Override
+    public WarehouseDto getDefaultWarehouse(Long shopId) {
+        return maToDto(warehouseRepo.findByShop_IdAndIsDefault(shopId, true));
     }
 
     @Override

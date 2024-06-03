@@ -12,9 +12,5 @@ public interface PartService {
 
     List<Part> getAllParts();
 
-    List<Part> getPartsByCategory(Long categoryId);
-
-    List<Part> getAllPartsByCategory(Long categoryId);
-
     boolean addPart(Part part);
 }

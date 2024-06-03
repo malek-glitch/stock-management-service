@@ -10,6 +10,8 @@ import com.crocostaud.stockmanagement.service.OrderItemService;
 import com.crocostaud.stockmanagement.service.PartService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
@@ -24,10 +26,18 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public OrderItemDto createOrderItem(OrderItemDto orderItemDto) {
+    public List<OrderItemDto> getAllItems(Long orderId) {
+        return orderItemRepo.findByOrder_Id(orderId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @Override
+    public OrderItemDto createOrderItem(OrderItemDto orderItemDto, Long shopId) {
         Part part = partService.getPart(orderItemDto.getPartId());
         if (part == null)
-            return null;
+            throw new RuntimeException("Part not found");
 
         OrderItem orderItem = OrderItem.builder()
                 .part(part)
@@ -38,41 +48,9 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .discount(orderItemDto.getDiscount())
                 .build();
         OrderItem savedOrderItem = orderItemRepo.save(orderItem);
-        // TODO add shop id to this method
-        inventoryService.createInventory(orderItemDto, 1L);
+        // TODO add shop id to this method : Done
+        inventoryService.createInventory(orderItemDto, shopId);
         return mapToDto(savedOrderItem);
-    }
-
-    private OrderItemDto mapToDto(OrderItem orderItem) {
-        /*
-        TODO: cleanup
-
-        Order order = orderItem.getOrder();
-        OrderDto orderDto = OrderDto.builder()
-                .id(order.getId())
-                .providerId(order.getProvider().getId())
-                .build();
-
-        Product product = orderItem.getProduct();
-        ProductDto productDto = ProductDto.builder()
-                .id(product.getId())
-                .ref(product.getRef())
-                .name(product.getName())
-                .image(product.getImage())
-                .description(product.getDescription())
-                .SupplierName(product.getSupplierName())
-                .build();
-*/
-
-        return OrderItemDto.builder()
-                .orderId(orderItem.getOrder().getId())
-                .partId(orderItem.getPart().getId())
-                .id(orderItem.getId())
-                .price(orderItem.getPrice())
-                .quantity(orderItem.getQuantity())
-                .TVA(orderItem.getTVA())
-                .discount(orderItem.getDiscount())
-                .build();
     }
 
     @Override
@@ -84,5 +62,18 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public void deleteOrderItem(Long id) {
         orderItemRepo.deleteById(id);
+    }
+
+    private OrderItemDto mapToDto(OrderItem orderItem) {
+        return OrderItemDto.builder()
+                .orderId(orderItem.getOrder().getId())
+                .partId(orderItem.getPart().getId())
+                .partName(orderItem.getPart().getName())
+                .id(orderItem.getId())
+                .price(orderItem.getPrice())
+                .quantity(orderItem.getQuantity())
+                .TVA(orderItem.getTVA())
+                .discount(orderItem.getDiscount())
+                .build();
     }
 }

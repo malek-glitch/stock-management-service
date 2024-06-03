@@ -2,12 +2,14 @@ package com.crocostaud.stockmanagement.service.impl;
 
 import com.crocostaud.stockmanagement.dto.stock.OrderDto;
 import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
+import com.crocostaud.stockmanagement.model.part.Part;
 import com.crocostaud.stockmanagement.model.stock.Order;
 import com.crocostaud.stockmanagement.model.stock.Provider;
 import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.repository.OrderRepository;
 import com.crocostaud.stockmanagement.service.OrderItemService;
 import com.crocostaud.stockmanagement.service.OrderService;
+import com.crocostaud.stockmanagement.service.PartService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,10 +20,20 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepo;
     private final OrderItemService orderItemService;
+    private final PartService partService;
 
-    public OrderServiceImpl(OrderRepository orderRepo, OrderItemService orderItemService) {
+    public OrderServiceImpl(OrderRepository orderRepo, OrderItemService orderItemService, PartService partService) {
         this.orderRepo = orderRepo;
         this.orderItemService = orderItemService;
+        this.partService = partService;
+    }
+
+    @Override
+    public List<OrderDto> getOrders(Long shopId) {
+        return orderRepo.findByShop_Id(shopId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
     @Override
@@ -35,22 +47,25 @@ public class OrderServiceImpl implements OrderService {
                 .date(LocalDateTime.now())
                 .build();
         Order savedOrder = orderRepo.save(order);
-        addItemsToOrder(orderItems, order.getId());
+        addItemsToOrder(orderItems, order.getId(), order.getShop().getId());
         return mapToDto(savedOrder);
     }
 
     @Override
-    public void addItemsToOrder(List<OrderItemDto> orderItems, Long OrderId) {
-        for (OrderItemDto orderItem : orderItems) {
-            orderItem.setOrderId(OrderId);
-            orderItemService.createOrderItem(orderItem);
+    public void addItemsToOrder(List<OrderItemDto> orderItems, Long OrderId, Long ShopId) {
+        for (OrderItemDto item : orderItems) {
+            Part part = partService.getPart(item.getPartId());
+            item.setOrderId(OrderId);
+            item.setPartName(part.getName());
+            orderItemService.createOrderItem(item, ShopId);
         }
     }
 
     @Override
     public OrderDto updateOrder(OrderDto orderDto, Long id) {
         Optional<Order> orderOptional = orderRepo.findById(id);
-        if (orderOptional.isEmpty()) return null;
+        if (orderOptional.isEmpty())
+            return null;
         orderRepo.updateDiscountAndPaidAmountAndDateById(orderDto.getDiscount(), orderDto.getPaidAmount(), orderDto.getDate(), id);
         return mapToDto(orderRepo.findById(id).get());
     }
@@ -59,6 +74,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto getOrder(Long orderId) {
         Optional<Order> optionalOrder = orderRepo.findById(orderId);
         return optionalOrder.map(this::mapToDto).orElse(null);
+    }
+
+    @Override
+    public List<OrderItemDto> getOrderItems(Long orderId) {
+        return orderItemService.getAllItems(orderId);
     }
 
     @Override

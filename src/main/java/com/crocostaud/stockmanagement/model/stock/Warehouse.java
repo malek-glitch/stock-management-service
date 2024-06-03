@@ -2,18 +2,17 @@ package com.crocostaud.stockmanagement.model.stock;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 public class Warehouse {
     @Id
@@ -26,7 +25,7 @@ public class Warehouse {
     private Location location;
 
     @OneToMany(mappedBy = "warehouse", orphanRemoval = true)
-    private Set<Inventory> inventories = new LinkedHashSet<>();
+    private Set<Inventory> inventories;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")

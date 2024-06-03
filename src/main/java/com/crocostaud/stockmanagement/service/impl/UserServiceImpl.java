@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
                 .username(userDto.getUsername())
                 .password(encryptPassword(userDto.getPassword()))
                 .email(userDto.getEmail())
+                .phone(userDto.getPhone())
                 .build();
         if (ShopId != null) {
             user.setShop(new Shop(ShopId));

@@ -4,7 +4,7 @@ import com.crocostaud.stockmanagement.dto.stock.ProviderDto;
 import com.crocostaud.stockmanagement.model.stock.Provider;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.ProviderService;
-import com.crocostaud.stockmanagement.utils.annotation.Username;
+import com.crocostaud.stockmanagement.utils.annotation.User;
 import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -29,8 +29,8 @@ public class ProviderController {
     }
 
     @GetMapping
-    ResponseEntity<Iterable<ProviderDto>> getAll(@Username String username) {
-        ShopUser user = auth.getUser(username);
+    ResponseEntity<Iterable<ProviderDto>> getAll(@User ShopUser user) {
+
         if (user == null || user.getShop() == null)
             return ResponseEntity.noContent().build();
         List<ProviderDto> allProviders = providerService.getAllProviders(user.getShop().getId());
@@ -38,8 +38,8 @@ public class ProviderController {
     }
 
     @GetMapping("/{providerId}")
-    public ResponseEntity<Provider> get(@PathVariable Long providerId, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    public ResponseEntity<Provider> get(@PathVariable Long providerId, @User ShopUser user) {
+
         Provider provider = providerService.getProvider(providerId);
 
         if (provider == null || user.getShop() == null || !Objects.equals(provider.getShop().getId(), user.getShop().getId()))
@@ -49,8 +49,8 @@ public class ProviderController {
     }
 
     @PostMapping
-    public ResponseEntity<ProviderDto> create(@RequestBody ProviderDto providerDto, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    public ResponseEntity<ProviderDto> create(@RequestBody ProviderDto providerDto, @User ShopUser user) {
+
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
         providerDto.setShopId(user.getShop().getId());
@@ -59,8 +59,8 @@ public class ProviderController {
     }
 
     @PutMapping("/{providerId}")
-    ResponseEntity<ProviderDto> update(@PathVariable Long providerId, @RequestBody ProviderDto providerDto, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    ResponseEntity<ProviderDto> update(@PathVariable Long providerId, @RequestBody ProviderDto providerDto, @User ShopUser user) {
+
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
         if (!Objects.equals(providerDto.getShopId(), user.getShop().getId()))
@@ -68,9 +68,9 @@ public class ProviderController {
         return ResponseEntity.ok(providerService.updateProvider(providerDto, providerId));
     }
 
-    @DeleteMapping("/providerId")
-    ResponseEntity<ProviderDto> delete(@PathVariable Long providerId, @Username String username) {
-        ShopUser user = auth.getUser(username);
+    @DeleteMapping("/{providerId}")
+    ResponseEntity<ProviderDto> delete(@PathVariable Long providerId, @User ShopUser user) {
+
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
         Provider provider = providerService.getProvider(providerId);

@@ -22,7 +22,7 @@ public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String partName;
     private int quantityAvailable;
     @Builder.Default
     private int minimumStockQuantity = 0;
@@ -40,6 +40,7 @@ public class Inventory {
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
 
     @Override
     public final boolean equals(Object o) {

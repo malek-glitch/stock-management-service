@@ -3,12 +3,16 @@ package com.crocostaud.stockmanagement.service.impl;
 import com.crocostaud.stockmanagement.dto.part.PartDto;
 import com.crocostaud.stockmanagement.dto.stock.InventoryDto;
 import com.crocostaud.stockmanagement.dto.stock.OrderItemDto;
+import com.crocostaud.stockmanagement.dto.stock.SellItemDto;
+import com.crocostaud.stockmanagement.dto.stock.WarehouseDto;
 import com.crocostaud.stockmanagement.model.part.Part;
 import com.crocostaud.stockmanagement.model.stock.Inventory;
 import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.model.stock.Warehouse;
 import com.crocostaud.stockmanagement.repository.InventoryRepository;
 import com.crocostaud.stockmanagement.service.InventoryService;
+import com.crocostaud.stockmanagement.service.PartService;
+import com.crocostaud.stockmanagement.service.ShopService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +23,13 @@ public class InventoryServiceImpl implements InventoryService {
 
     private static final int DEFAULT_MINIMUM_STOCK = 1;
     private final InventoryRepository inventoryRepo;
-//    private final PartRepository partRepo;
+    private final PartService partService;
+    private final ShopService shopService;
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepo) {
+    public InventoryServiceImpl(InventoryRepository inventoryRepo, PartService partService, ShopService shopService) {
         this.inventoryRepo = inventoryRepo;
-//        this.partRepo = partRepo;
+        this.partService = partService;
+        this.shopService = shopService;
     }
 
     @Override
@@ -52,10 +58,11 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public InventoryDto createInventory(InventoryDto inventoryDto) {
-
+        Part part = partService.getPart(inventoryDto.getPartId());
         Inventory inventory = Inventory.builder()
                 .shop(new Shop(inventoryDto.getShopId()))
-                .part(new Part(inventoryDto.getPartId()))
+                .part(part)
+                .partName(part.getName())
                 .warehouse(new Warehouse(inventoryDto.getWarehouseId()))
                 .minimumStockQuantity(inventoryDto.getMinimumStockQuantity())
                 .quantityAvailable(inventoryDto.getQuantityAvailable())
@@ -71,19 +78,44 @@ public class InventoryServiceImpl implements InventoryService {
     public InventoryDto createInventory(OrderItemDto orderItemDto, Long shopId) {
         Inventory inventory = inventoryRepo.findByPart_IdAndShop_IdAndPrice(orderItemDto.getPartId(), shopId, orderItemDto.getPrice());
         if (inventory == null) {
-            Inventory newInventory = new Inventory(
-                    null,
-                    orderItemDto.getQuantity(),
-                    DEFAULT_MINIMUM_STOCK,
-                    orderItemDto.getPrice(),
-                    orderItemDto.getTVA(),
-                    new Part(orderItemDto.getPartId()),
-                    new Shop(shopId),
-                    new Warehouse()
-            );
+            Part part = partService.getPart(orderItemDto.getPartId());
+            WarehouseDto defaultWarehouse = shopService.getDefaultWarehouse(shopId);
+            Inventory newInventory = Inventory.builder()
+                    .shop(new Shop(shopId))
+                    .part(part)
+                    .partName(part.getName())
+                    .warehouse(new Warehouse(defaultWarehouse.getId()))
+                    .minimumStockQuantity(DEFAULT_MINIMUM_STOCK)
+                    .quantityAvailable(orderItemDto.getQuantity())
+                    .price(orderItemDto.getPrice())
+                    .tva(orderItemDto.getTVA())
+                    .build();
+            Inventory savedInventory = inventoryRepo.save(newInventory);
+            return mapToDto(savedInventory);
+        } else {
+            int updatedQuantity = inventory.getQuantityAvailable() + orderItemDto.getQuantity();
+            inventoryRepo.updateQuantityAvailableById(inventory.getId(), updatedQuantity);
+            inventory.setQuantityAvailable(updatedQuantity);
         }
+        return mapToDto(inventory);
+    }
 
-        return null;
+    @Override
+    public InventoryDto updateInventory(SellItemDto sellItemDto, Long shopId) {
+        Inventory inventory = inventoryRepo.findByPart_IdAndShop_Id(sellItemDto.getPartId(), shopId);
+        if (inventory == null) {
+            throw new RuntimeException("Inventory not found for part(id): " + sellItemDto.getPartId());
+        }
+        if (inventory.getQuantityAvailable() < sellItemDto.getQuantity()) {
+            throw new RuntimeException("sell exceeds stock limit : " + inventory.getQuantityAvailable());
+        }
+        int updatedQuantity = inventory.getQuantityAvailable() - sellItemDto.getQuantity();
+        inventoryRepo.updateQuantity(updatedQuantity, inventory.getId());
+        inventory.setQuantityAvailable(updatedQuantity);
+        if (inventory.getQuantityAvailable() == sellItemDto.getQuantity()) {
+            inventoryRepo.deleteById(inventory.getId());
+        }
+        return mapToDto(inventory);
     }
 
     @Override

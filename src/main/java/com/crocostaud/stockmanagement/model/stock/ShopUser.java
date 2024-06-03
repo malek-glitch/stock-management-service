@@ -19,10 +19,8 @@ import java.util.Objects;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity(name = "users")
 public class ShopUser implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,11 +32,16 @@ public class ShopUser implements UserDetails {
 
     private String email;
 
+    /**
+     * This field represent the role assigned to user
+     * the role can be either:
+     * <li> {@code ROLE_ADMIN} : has all privileges</li>
+     * <li> {@code ROLE_USER} : has basic authorities</li>
+     */
     private String role;
 
     private String phone;
 
-    @ToString.Exclude
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "shop_id")
@@ -86,5 +89,18 @@ public class ShopUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ShopUser{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", phone='" + phone + '\'' +
+                ", shopId=" + (shop == null ? null : shop.getId()) +
+                '}';
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/stock")
 public class InventoryController {
     private final InventoryService inventoryService;
 

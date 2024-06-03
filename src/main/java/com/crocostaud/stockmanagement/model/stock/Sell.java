@@ -8,13 +8,14 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@SuperBuilder
 @Getter
 @Setter
-
 @RequiredArgsConstructor
 @Entity
 public class Sell extends Commande {
@@ -30,6 +31,10 @@ public class Sell extends Commande {
 
     @OneToMany(mappedBy = "sell", orphanRemoval = true)
     private Set<SellItem> sellItems = new LinkedHashSet<>();
+
+    public Sell(Long id) {
+        super(id);
+    }
 
 }
 
