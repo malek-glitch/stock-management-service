@@ -50,7 +50,7 @@ public class ClientController {
         if (user == null || user.getShop() == null)
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Unauthorized");
         ClientDto client = clientService.getClient(clientId);
-        if (client == null || clientId != clientDto.getId() || client.getShopId() != user.getShop().getId())
+        if (client == null || clientId != clientDto.id() || client.shopId() != user.getShop().getId())
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Unauthorized");
         ClientDto updatedClient = clientService.updateClient(clientDto, user.getShop().getId());
         return ResponseEntity.ok(updatedClient);

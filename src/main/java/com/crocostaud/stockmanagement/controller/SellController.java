@@ -55,6 +55,8 @@ public class SellController {
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Sell request not valid");
         }
         SellDto sell = sellService.createSell(sellRequest.sell(), sellRequest.items());
+        if (sell == null)
+            throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Sell creation failed");
         return ResponseEntity.ok(sell);
     }
 

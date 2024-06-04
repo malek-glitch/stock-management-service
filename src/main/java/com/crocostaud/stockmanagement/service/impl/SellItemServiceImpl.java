@@ -42,6 +42,11 @@ public class SellItemServiceImpl implements SellItemService {
         Part part = partService.getPart(sellItemDto.getPartId());
         if (part == null)
             throw new RuntimeException("Part not found");
+        try {
+            inventoryService.updateInventory(sellItemDto, shopId);
+        } catch (Exception e) {
+            throw new RuntimeException("Inventory update failed");
+        }
 
         SellItem sellItem = SellItem.builder()
                 .part(part)
@@ -52,7 +57,6 @@ public class SellItemServiceImpl implements SellItemService {
                 .discount(sellItemDto.getDiscount())
                 .build();
         SellItem savedsellItem = itemRepo.save(sellItem);
-        inventoryService.updateInventory(sellItemDto, shopId);
         return mapToDto(savedsellItem);
     }
 

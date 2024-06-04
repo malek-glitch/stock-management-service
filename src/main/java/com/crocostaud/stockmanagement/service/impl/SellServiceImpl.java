@@ -68,7 +68,12 @@ public class SellServiceImpl implements SellService {
                 .date(LocalDateTime.now())
                 .build();
         Sell savedSell = sellRepo.save(sell);
-        addItemsToSell(SellItems, savedSell.getId(), SellDto.shopId());
+        try {
+            addItemsToSell(SellItems, savedSell.getId(), SellDto.shopId());
+        } catch (Exception e) {
+            sellRepo.delete(sell);
+            return null;
+        }
         return mapToDto(sell);
     }
 
@@ -81,13 +86,20 @@ public class SellServiceImpl implements SellService {
     }
 
     @Override
-    public void addItemsToSell(List<SellItemDto> SellItems, Long SellId, Long shopId) {
-        for (SellItemDto item : SellItems) {
+    public void addItemsToSell(List<SellItemDto> sellItems, Long SellId, Long shopId) {
+
+        for (SellItemDto item : sellItems) {
             Part part = partService.getPart(item.getPartId());
             item.setPartName(part.getName());
             item.setSellId(SellId);
-            itemService.createSellItem(item, shopId);
+            try {
+                itemService.createSellItem(item, shopId);
+            } catch (Exception e) {
+                sellItems.remove(item);
+            }
         }
+        if (sellItems.isEmpty())
+            throw new RuntimeException("sell items is empty");
     }
 
     @Override

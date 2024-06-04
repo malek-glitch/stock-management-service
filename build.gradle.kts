@@ -1,7 +1,7 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.2.4"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("org.springframework.boot") version "3.3.0"
+    id("io.spring.dependency-management") version "1.1.5"
 }
 
 group = "com.crocostaud"
@@ -25,17 +25,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-    implementation("org.postgresql:postgresql:42.7.3")
-    implementation("mysql:mysql-connector-java:8.0.33")
 
-    implementation("org.springframework.boot:spring-boot-starter-security")
 
 //    implementation("org.springframework.security:spring-security-core:6.2.1")
 //    implementation("org.springframework.security:spring-security-web:6.2.1")
@@ -43,7 +45,6 @@ dependencies {
 
 
     implementation("io.jsonwebtoken:jjwt:0.12.5")
-//    implementation("io.jsonwebtoken:jjwt-impl:0.12.5")
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
     implementation("com.auth0:java-jwt:4.4.0")

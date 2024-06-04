@@ -23,9 +23,9 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDto createClient(ClientDto clientDto, Long shopId) {
         Client client = Client.builder()
-                .email(clientDto.getEmail())
-                .phone(clientDto.getPhone())
-                .name(clientDto.getName())
+                .email(clientDto.email())
+                .phone(clientDto.phone())
+                .name(clientDto.name())
                 .shop(new Shop(shopId))
                 .build();
         Client savedClient = clientRepo.save(client);
@@ -38,7 +38,7 @@ public class ClientServiceImpl implements ClientService {
         if (client == null)
             return null;
 
-        clientRepo.updateNameAndPhoneById(clientDto.getName(), clientDto.getPhone(), id);
+        clientRepo.updateNameAndPhoneById(clientDto.name(), clientDto.phone(), id);
 
         Client updatedClient = clientRepo.findById(id).orElse(null);
         return mapToDto(updatedClient);

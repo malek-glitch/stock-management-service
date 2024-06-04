@@ -1,9 +1,11 @@
 package com.crocostaud.stockmanagement.service.impl;
 
+import com.crocostaud.stockmanagement.dto.stock.ClientDto;
 import com.crocostaud.stockmanagement.dto.stock.ShopDto;
 import com.crocostaud.stockmanagement.dto.stock.WarehouseDto;
 import com.crocostaud.stockmanagement.model.stock.*;
 import com.crocostaud.stockmanagement.repository.ShopRepository;
+import com.crocostaud.stockmanagement.service.ClientService;
 import com.crocostaud.stockmanagement.service.ShopService;
 import com.crocostaud.stockmanagement.service.WarehouseService;
 import com.crocostaud.stockmanagement.utils.security.Auth;
@@ -17,11 +19,13 @@ public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepo;
     private final Auth auth;
     private final WarehouseService warehouseService;
+    private final ClientService clientService;
 
-    public ShopServiceImpl(ShopRepository shopRepos, Auth auth, WarehouseService warehouseService) {
+    public ShopServiceImpl(ShopRepository shopRepos, Auth auth, WarehouseService warehouseService, ClientService clientService) {
         this.shopRepo = shopRepos;
         this.auth = auth;
         this.warehouseService = warehouseService;
+        this.clientService = clientService;
     }
 
     @Override
@@ -34,6 +38,8 @@ public class ShopServiceImpl implements ShopService {
 
         Shop savedShop = shopRepo.save(shop);
         warehouseService.createWarehouse(warehouseDto, savedShop.getId(), true);
+        ClientDto client = new ClientDto(null, "Passager", "+216 24 567 890", "passager@voiture.tn", savedShop.getId());
+        clientService.createClient(client, savedShop.getId());
         return mapToDto(savedShop);
     }
 

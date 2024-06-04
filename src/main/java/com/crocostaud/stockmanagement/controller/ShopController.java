@@ -30,6 +30,7 @@ public class ShopController {
         }
         ShopDto savedShop = shopService.createShop(shopRequest.shopDto(), shopRequest.warehouseDto());
         userService.setShop(user.getId(), savedShop.getId());
+
         return ResponseEntity.ok(savedShop);
     }
 
