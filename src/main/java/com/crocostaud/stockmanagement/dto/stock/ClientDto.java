@@ -10,5 +10,6 @@ import java.io.Serializable;
  */
 
 @Builder
-public record ClientDto(Long id, String name, String phone, String email, Long shopId) implements Serializable {
+public record ClientDto(Long id, String name, String phone, String email, Long shopId,
+                        String address) implements Serializable {
 }

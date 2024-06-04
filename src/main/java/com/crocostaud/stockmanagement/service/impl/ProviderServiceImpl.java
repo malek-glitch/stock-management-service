@@ -8,7 +8,6 @@ import com.crocostaud.stockmanagement.service.ProviderService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProviderServiceImpl implements ProviderService {
@@ -26,6 +25,7 @@ public class ProviderServiceImpl implements ProviderService {
                 .name(providerDto.getName())
                 .email(providerDto.getEmail())
                 .phone(providerDto.getPhone())
+                .address(providerDto.getAddress())
                 .build();
         Provider savedProvider = providerRepo.save(provider);
 
@@ -44,14 +44,15 @@ public class ProviderServiceImpl implements ProviderService {
                 .name(providerDto.getName())
                 .email(providerDto.getName())
                 .phone(providerDto.getPhone())
+                .address(providerDto.getAddress())
                 .build();
         return mapToDto(updatedProvider);
     }
 
     @Override
     public Provider getProvider(Long id) {
-        Optional<Provider> providerOptional = providerRepo.findById(id);
-        return providerOptional.orElse(null);
+        return providerRepo.findById(id)
+                .orElse(null);
     }
 
     @Override
@@ -65,14 +66,14 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     private ProviderDto mapToDto(Provider provider) {
-
-        Long shopId = provider.getShop() == null ? null : provider.getShop().getId();
+        Long shopId = (provider.getShop() == null) ? null : provider.getShop().getId();
 
         return ProviderDto.builder()
                 .id(provider.getId())
                 .name(provider.getName())
                 .email(provider.getEmail())
                 .phone(provider.getPhone())
+                .address(provider.getAddress())
                 .shopId(shopId)
                 .build();
     }

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
                 .password(encryptPassword(userDto.getPassword()))
                 .email(userDto.getEmail())
                 .phone(userDto.getPhone())
+                .createdAt(LocalDate.now())
                 .build();
         if (ShopId != null) {
             user.setShop(new Shop(ShopId));
@@ -110,16 +112,16 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto mapToDto(ShopUser user) {
-        if (user == null) return null;
-
+        if (user == null)
+            return null;
         Long ShopId = user.getShop() != null ? user.getShop().getId() : null;
-
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .phone(user.getPhone())
                 .email(user.getEmail())
+                .createdAt(user.getCreatedAt())
                 .shopId(ShopId)
                 .role(user.getRole())
                 .build();

@@ -5,7 +5,6 @@ import com.crocostaud.stockmanagement.model.stock.Provider;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.ProviderService;
 import com.crocostaud.stockmanagement.utils.annotation.User;
-import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +19,14 @@ import java.util.Objects;
 public class ProviderController {
 
     private final ProviderService providerService;
-    private final Auth auth;
 
     @Autowired
-    public ProviderController(ProviderService providerService, Auth auth) {
+    public ProviderController(ProviderService providerService) {
         this.providerService = providerService;
-        this.auth = auth;
     }
 
     @GetMapping
     ResponseEntity<Iterable<ProviderDto>> getAll(@User ShopUser user) {
-
         if (user == null || user.getShop() == null)
             return ResponseEntity.noContent().build();
         List<ProviderDto> allProviders = providerService.getAllProviders(user.getShop().getId());

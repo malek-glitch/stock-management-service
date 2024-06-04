@@ -20,6 +20,7 @@ public class Client {
     private String name;
     private String phone;
     private String email;
+    private String address;
 
     @ManyToOne
     @JoinColumn(name = "shop_id")

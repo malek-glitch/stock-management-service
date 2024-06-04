@@ -38,7 +38,7 @@ public class ShopServiceImpl implements ShopService {
 
         Shop savedShop = shopRepo.save(shop);
         warehouseService.createWarehouse(warehouseDto, savedShop.getId(), true);
-        ClientDto client = new ClientDto(null, "Passager", "+216 24 567 890", "passager@voiture.tn", savedShop.getId());
+        ClientDto client = new ClientDto(null, "Passager", "+216 24 567 890", "passager@voiture.tn", savedShop.getId(), " adresse Locale");
         clientService.createClient(client, savedShop.getId());
         return mapToDto(savedShop);
     }

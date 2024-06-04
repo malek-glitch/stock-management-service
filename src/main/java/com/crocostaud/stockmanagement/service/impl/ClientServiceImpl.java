@@ -26,6 +26,7 @@ public class ClientServiceImpl implements ClientService {
                 .email(clientDto.email())
                 .phone(clientDto.phone())
                 .name(clientDto.name())
+                .address(clientDto.address())
                 .shop(new Shop(shopId))
                 .build();
         Client savedClient = clientRepo.save(client);
@@ -65,6 +66,7 @@ public class ClientServiceImpl implements ClientService {
                 .name(client.getName())
                 .phone(client.getPhone())
                 .email(client.getEmail())
+                .address(client.getAddress())
                 .shopId(client.getShop().getId())
                 .build();
     }
