@@ -48,15 +48,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        var user = userDetailsService.loadUserByUsername(request.getUsername());
+        var user = (ShopUser) userDetailsService.loadUserByUsername(request.getUsername());
         if (user == null)
             return null;
+
+        Shop shop = null;
+        if( user.getShop() != null)
+            shop = user.getShop();
+
         ShopUser userDetails = ShopUser.builder()
                 .username(user.getUsername())
                 .password(passwordEncoder.encode(user.getPassword()))
-                .email(request.getEmail())
-                .role(request.getRole())
-                .shop(new Shop(request.getShopId()))
+                .email(user.getEmail())
+                .role(user.getRole())
+                .shop(shop)
                 .build();
         return new Token(jwtService.generateToken(userDetails), "TODO add refresh token");
     }
