@@ -6,6 +6,7 @@ import com.crocostaud.stockmanagement.service.ShopService;
 import com.crocostaud.stockmanagement.service.UserService;
 import com.crocostaud.stockmanagement.utils.annotation.User;
 import com.crocostaud.stockmanagement.utils.request.ShopRequest;
+import com.crocostaud.stockmanagement.utils.security.Auth;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +18,21 @@ import org.springframework.web.server.ResponseStatusException;
 public class ShopController {
     private final ShopService shopService;
     private final UserService userService;
+    private final Auth auth;
 
-    public ShopController(ShopService shopService, UserService userService) {
+    public ShopController(ShopService shopService, UserService userService, Auth auth) {
         this.shopService = shopService;
         this.userService = userService;
+        this.auth = auth;
     }
 
     @PostMapping
-    public ResponseEntity<ShopDto> create(@RequestBody ShopRequest shopRequest, @User ShopUser user) {
-        if (user == null || user.getShop() != null) {
+    public ResponseEntity<ShopDto> create(@RequestBody ShopRequest shopRequest) {
+        ShopUser user = auth.getUser(shopRequest.username());
+        if (user == null) {
             return ResponseEntity.badRequest().build();
         }
+
         ShopDto savedShop = shopService.createShop(shopRequest.shopDto(), shopRequest.warehouseDto());
         userService.setShop(user.getId(), savedShop.getId());
 

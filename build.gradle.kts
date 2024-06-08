@@ -26,6 +26,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -48,8 +50,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
     implementation("com.auth0:java-jwt:4.4.0")
-
-
+//    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
 }
 
 tasks.withType<Test> {

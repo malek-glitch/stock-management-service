@@ -40,7 +40,7 @@ public class JwtServiceImpl implements JwtService {
                 .claim("roles", user.getRole())
                 .claim("email", user.getEmail())
                 .claim("phone", user.getPhone())
-                .claim("password", user.getPassword())
+                .claim("shopId", user.getShop().getId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
                 .signWith(getSigningKey())
