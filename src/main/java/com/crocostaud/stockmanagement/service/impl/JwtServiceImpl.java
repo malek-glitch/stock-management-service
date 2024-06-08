@@ -35,7 +35,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(ShopUser user) {
-        return Jwts.builder()
+        String compact = Jwts.builder()
                 .subject(user.getUsername())
                 .claim("roles", user.getRole())
                 .claim("email", user.getEmail())
@@ -45,6 +45,8 @@ public class JwtServiceImpl implements JwtService {
                 .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
                 .signWith(getSigningKey())
                 .compact();
+        System.out.println(compact);
+        return compact;
     }
 
     private boolean isTokenExpired(String token) {
