@@ -21,6 +21,8 @@ public interface CarService {
 
     SubModelDto getSubModel(Long subModelId);
 
-    List<CategoryDto> getCategories();
+    List<String> getCategories();
+
+    List<CategoryDto> getAllCategories();
 
 }

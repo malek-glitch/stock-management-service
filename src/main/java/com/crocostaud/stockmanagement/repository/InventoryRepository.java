@@ -39,4 +39,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @Modifying
     @Query("update Inventory i set i.quantityAvailable = ?1 where i.id = ?2")
     void updateQuantity(int quantityAvailable, Long id);
+
+    @Query("select i from Inventory i where i.shop.id = ?1")
+    List<Inventory> findByShop_Id(Long id);
 }

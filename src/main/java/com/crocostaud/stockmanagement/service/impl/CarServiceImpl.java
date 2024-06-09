@@ -68,11 +68,13 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CategoryDto> getCategories() {
-        return categoryRepo.findDistinctCategoryName()
-                .stream()
-                .map(this::mapToDto)
-                .toList();
+    public List<String> getCategories() {
+        return categoryRepo.findDistinctCategoryName();
+    }
+
+    @Override
+    public List<CategoryDto> getAllCategories() {
+        return categoryRepo.findAll().stream().map(this::mapToDto).toList();
     }
 
     private ModelDto mapToDto(Model model) {

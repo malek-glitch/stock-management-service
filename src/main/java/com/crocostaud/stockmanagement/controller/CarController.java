@@ -68,10 +68,12 @@ public class CarController {
         return ResponseEntity.ok(subModel);
     }
 
+    //    @GetMapping("/categories")
+//    public ResponseEntity<List<String>> categories() {
+//        return ResponseEntity.ok(carService.getCategories());
+//    }
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDto>> categories() {
-        return ResponseEntity.ok(carService.getCategories());
+    public ResponseEntity<List<CategoryDto>> allCategories() {
+        return ResponseEntity.ok(carService.getAllCategories());
     }
-
-
 }

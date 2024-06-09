@@ -1,10 +1,14 @@
 package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.stock.InventoryDto;
+import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.InventoryService;
+import com.crocostaud.stockmanagement.utils.annotation.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -17,10 +21,19 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<InventoryDto> create(@RequestBody InventoryDto inventoryDto) {
         InventoryDto inventory = inventoryService.createInventory(inventoryDto);
         return ResponseEntity.ok(inventory);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<InventoryDto>> getAll(@User ShopUser shopUser) {
+        if (shopUser == null || shopUser.getShop() == null) {
+            return ResponseEntity.noContent().build();
+        }
+        List<InventoryDto> allInventory = inventoryService.getAllInventory(shopUser.getShop().getId());
+        return ResponseEntity.ok(allInventory);
     }
 
     @GetMapping("/{inventoryId}")

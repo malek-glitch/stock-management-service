@@ -39,6 +39,11 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<InventoryDto> getAllInventory(Long shopId) {
+        return inventoryRepo.findByShop_Id(shopId).stream().map(this::mapToDto).toList();
+    }
+
+    @Override
     public PartDto getPartFromInventory(Long inventoryId) {
         Optional<Inventory> inventoryOptional = inventoryRepo.findById(inventoryId);
         if (inventoryOptional.isEmpty())

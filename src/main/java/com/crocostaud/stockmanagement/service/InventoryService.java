@@ -10,6 +10,8 @@ import java.util.List;
 public interface InventoryService {
     InventoryDto getInventory(Long inventoryId);
 
+    List<InventoryDto> getAllInventory(Long shopId);
+
     PartDto getPartFromInventory(Long inventoryId);
 
     List<InventoryDto> getInventoryByShopId(Long ShopId);
