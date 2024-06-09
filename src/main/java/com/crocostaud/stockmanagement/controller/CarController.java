@@ -1,5 +1,6 @@
 package com.crocostaud.stockmanagement.controller;
 
+import com.crocostaud.stockmanagement.dto.part.CategoryDto;
 import com.crocostaud.stockmanagement.dto.part.ModelDto;
 import com.crocostaud.stockmanagement.dto.stock.SubModelDto;
 import com.crocostaud.stockmanagement.model.part.Maker;
@@ -66,4 +67,11 @@ public class CarController {
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(subModel);
     }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDto>> categories() {
+        return ResponseEntity.ok(carService.getCategories());
+    }
+
+
 }

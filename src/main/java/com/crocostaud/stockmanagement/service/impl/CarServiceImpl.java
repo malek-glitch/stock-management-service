@@ -1,10 +1,13 @@
 package com.crocostaud.stockmanagement.service.impl;
 
+import com.crocostaud.stockmanagement.dto.part.CategoryDto;
 import com.crocostaud.stockmanagement.dto.part.ModelDto;
 import com.crocostaud.stockmanagement.dto.stock.SubModelDto;
+import com.crocostaud.stockmanagement.model.part.Category;
 import com.crocostaud.stockmanagement.model.part.Maker;
 import com.crocostaud.stockmanagement.model.part.Model;
 import com.crocostaud.stockmanagement.model.part.SubModel;
+import com.crocostaud.stockmanagement.repository.CategoryRepository;
 import com.crocostaud.stockmanagement.repository.MakerRepository;
 import com.crocostaud.stockmanagement.repository.ModelRepository;
 import com.crocostaud.stockmanagement.repository.SubModelRepository;
@@ -20,11 +23,13 @@ public class CarServiceImpl implements CarService {
     private final MakerRepository makerRepo;
     private final ModelRepository modelRepo;
     private final SubModelRepository subModelRepo;
+    private final CategoryRepository categoryRepo;
 
-    CarServiceImpl(MakerRepository makerRepo, ModelRepository modelRepo, SubModelRepository subModelRepo) {
+    CarServiceImpl(MakerRepository makerRepo, ModelRepository modelRepo, SubModelRepository subModelRepo, CategoryRepository categoryRepo) {
         this.makerRepo = makerRepo;
         this.modelRepo = modelRepo;
         this.subModelRepo = subModelRepo;
+        this.categoryRepo = categoryRepo;
     }
 
     @Override
@@ -62,6 +67,14 @@ public class CarServiceImpl implements CarService {
         return mapToDto(submodel);
     }
 
+    @Override
+    public List<CategoryDto> getCategories() {
+        return categoryRepo.findDistinctCategoryName()
+                .stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
     private ModelDto mapToDto(Model model) {
         if (model == null) return null;
         return ModelDto.builder()
@@ -79,6 +92,16 @@ public class CarServiceImpl implements CarService {
                 .modelId(submodel.getModel().getId())
                 .description(submodel.getDescription())
                 .energyType(submodel.getEnergyType())
+                .build();
+    }
+
+    private CategoryDto mapToDto(Category category) {
+        if (category == null)
+            return null;
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
                 .build();
     }
 }
