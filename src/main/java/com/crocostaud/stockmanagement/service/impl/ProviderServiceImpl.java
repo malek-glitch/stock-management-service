@@ -37,7 +37,7 @@ public class ProviderServiceImpl implements ProviderService {
         if (!providerRepo.existsById(id))
             throw new RuntimeException("provider not found");
 
-        providerRepo.updateNameAndEmailAndPhoneById(providerDto.getName(), providerDto.getEmail(), providerDto.getPhone(), id);
+        providerRepo.updateNameAndEmailAndPhoneById(providerDto.getName(), providerDto.getEmail(), providerDto.getPhone(), providerDto.getAddress(), id);
 
         Provider updatedProvider = Provider.builder()
                 .id(id)

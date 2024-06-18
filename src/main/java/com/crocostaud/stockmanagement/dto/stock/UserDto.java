@@ -21,6 +21,5 @@ public class UserDto implements Serializable {
     String role;
     String phone;
     LocalDate createdAt;
-
     Long shopId;
 }

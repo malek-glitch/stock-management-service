@@ -22,6 +22,7 @@ public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "part_name")
     private String partName;
     private int quantityAvailable;
     @Builder.Default

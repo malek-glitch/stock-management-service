@@ -11,7 +11,7 @@ public interface PartRepository extends JpaRepository<Part, Long> {
     @Query("""
              select p from part p
              where upper(p.ref) like upper(concat('%', ?1, '%'))
-                or SOUNDEX(p.name) = SOUNDEX(?1)
+         
                 or upper(p.name) like upper(concat('%', ?1, '%'))
             """)
     List<Part> findByText(String text);

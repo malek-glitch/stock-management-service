@@ -19,7 +19,7 @@ public class SearchController {
         this.searchService = searchService;
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<List<PartDto>> search(@RequestBody SearchRequest search) {
 
         if (!isTextEmpty(search)) {

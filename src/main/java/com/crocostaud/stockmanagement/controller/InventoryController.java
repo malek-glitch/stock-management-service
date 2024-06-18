@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,7 +33,10 @@ public class InventoryController {
         if (shopUser == null || shopUser.getShop() == null) {
             return ResponseEntity.noContent().build();
         }
-        List<InventoryDto> allInventory = inventoryService.getAllInventory(shopUser.getShop().getId());
+        List<InventoryDto> allInventory = inventoryService.getInventoryByShopId(shopUser.getShop().getId());
+        System.out.println("--------------------------------------");
+        System.out.println(Arrays.toString(allInventory.toArray()));
+        System.out.println("--------------------------------------");
         return ResponseEntity.ok(allInventory);
     }
 

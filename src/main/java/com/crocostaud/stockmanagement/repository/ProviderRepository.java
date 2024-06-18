@@ -12,8 +12,8 @@ import java.util.List;
 public interface ProviderRepository extends JpaRepository<Provider, Long> {
     @Transactional
     @Modifying
-    @Query("update Provider p set p.name = ?1, p.email = ?2, p.phone = ?3 where p.id = ?4")
-    void updateNameAndEmailAndPhoneById(String name, String email, String phone, Long id);
+    @Query("update Provider p set p.name = ?1, p.email = ?2, p.phone = ?3, p.address = ?4 where p.id = ?5")
+    void updateNameAndEmailAndPhoneById(String name, String email, String phone, String address, Long id);
 
     List<ProviderDto> findByShop_Id(Long id);
 }

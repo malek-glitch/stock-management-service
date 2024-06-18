@@ -4,6 +4,7 @@ import com.crocostaud.stockmanagement.model.stock.Inventory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
+@ToString
 @Builder
 public final class InventoryDto implements Serializable {
     private Long id;

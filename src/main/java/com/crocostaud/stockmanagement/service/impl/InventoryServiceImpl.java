@@ -150,6 +150,7 @@ public class InventoryServiceImpl implements InventoryService {
                 .shopId(inventory.getShop().getId())
                 .partId(inventory.getPart().getId())
                 .warehouseId(inventory.getWarehouse().getId())
+                .partName(inventory.getPartName())
                 .quantityAvailable(inventory.getQuantityAvailable())
                 .minimumStockQuantity(inventory.getMinimumStockQuantity())
                 .price(inventory.getPrice())
