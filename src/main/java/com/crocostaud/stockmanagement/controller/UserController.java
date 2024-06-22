@@ -38,8 +38,10 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAll());
+    public ResponseEntity<List<UserDto>> getAllUsers(@User ShopUser user) {
+        if (user == null || user.getShop() == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        return ResponseEntity.ok(userService.getAll(user.getShop().getId()));
     }
 
     @GetMapping("/{userId}")

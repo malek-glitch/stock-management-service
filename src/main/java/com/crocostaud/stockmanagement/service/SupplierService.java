@@ -9,9 +9,7 @@ import java.util.List;
 public interface SupplierService {
     List<SupplierDto> getAllSuppliers();
 
-    SupplierDto getSupplier(Long id);
+    SupplierDto getSupplier(String name);
 
-    SupplierDto saveSupplier(SupplierDto supplier);
-
-    void deleteSupplier(Long id);
+    void deleteSupplier(String name);
 }

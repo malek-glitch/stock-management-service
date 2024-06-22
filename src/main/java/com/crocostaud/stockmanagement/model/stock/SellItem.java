@@ -13,6 +13,7 @@ import java.util.Objects;
 
 
 @SuperBuilder
+
 @Getter
 @Setter
 @ToString
@@ -28,6 +29,11 @@ public class SellItem extends CommandeItem {
     @ManyToOne
     @JoinColumn(name = "sell_id")
     private Sell sell;
+
+    /**
+     * this field represent the discount percentage for the item (e.g. 15%, 10%)
+     */
+    private int discount;
 
     @Override
     public final boolean equals(Object o) {

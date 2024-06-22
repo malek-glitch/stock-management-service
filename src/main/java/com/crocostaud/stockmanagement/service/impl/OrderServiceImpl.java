@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
     private Double calculateTotalPrice(List<OrderItemDto> orderItems) {
         return orderItems.stream().mapToDouble(item -> {
             double price = (item.getPrice() + item.getPrice() * item.getTVA() / 100) * item.getQuantity();
-            double discount = price * item.getDiscount() / 100;
+            double discount = price * item.getBenefice() / 100;
             return price - discount;
         }).sum();
     }

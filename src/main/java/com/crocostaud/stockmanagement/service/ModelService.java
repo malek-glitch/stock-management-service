@@ -14,4 +14,6 @@ public interface ModelService {
     ModelDto deleteModel(ModelDto modelDto);
 
     List<ModelDto> getAllModels();
+
+    List<ModelDto> getModelByPartId(long partId);
 }

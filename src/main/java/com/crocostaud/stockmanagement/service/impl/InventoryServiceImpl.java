@@ -10,8 +10,8 @@ import com.crocostaud.stockmanagement.model.stock.Inventory;
 import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.model.stock.Warehouse;
 import com.crocostaud.stockmanagement.repository.InventoryRepository;
+import com.crocostaud.stockmanagement.repository.PartRepository;
 import com.crocostaud.stockmanagement.service.InventoryService;
-import com.crocostaud.stockmanagement.service.PartService;
 import com.crocostaud.stockmanagement.service.ShopService;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +23,13 @@ public class InventoryServiceImpl implements InventoryService {
 
     private static final int DEFAULT_MINIMUM_STOCK = 1;
     private final InventoryRepository inventoryRepo;
-    private final PartService partService;
+    private final PartRepository partRepo;
     private final ShopService shopService;
 
-    public InventoryServiceImpl(InventoryRepository inventoryRepo, PartService partService, ShopService shopService) {
+    public InventoryServiceImpl(InventoryRepository inventoryRepo, PartRepository partRepo, ShopService shopService) {
         this.inventoryRepo = inventoryRepo;
-        this.partService = partService;
+        this.partRepo = partRepo;
+
         this.shopService = shopService;
     }
 
@@ -62,8 +63,14 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<InventoryDto> getInventoryByPartId(Long partId) {
+        List<Inventory> inventories = inventoryRepo.findByPart_Id(partId);
+        return inventories.stream().map(this::mapToDto).toList();
+    }
+
+    @Override
     public InventoryDto createInventory(InventoryDto inventoryDto) {
-        Part part = partService.getPart(inventoryDto.getPartId());
+        Part part = partRepo.findById(inventoryDto.getPartId()).orElse(null);
         Inventory inventory = Inventory.builder()
                 .shop(new Shop(inventoryDto.getShopId()))
                 .part(part)
@@ -83,7 +90,7 @@ public class InventoryServiceImpl implements InventoryService {
     public InventoryDto createInventory(OrderItemDto orderItemDto, Long shopId) {
         Inventory inventory = inventoryRepo.findByPart_IdAndShop_IdAndPrice(orderItemDto.getPartId(), shopId, orderItemDto.getPrice());
         if (inventory == null) {
-            Part part = partService.getPart(orderItemDto.getPartId());
+            Part part = partRepo.findById(orderItemDto.getPartId()).orElse(null);
             WarehouseDto defaultWarehouse = shopService.getDefaultWarehouse(shopId);
             Inventory newInventory = Inventory.builder()
                     .shop(new Shop(shopId))

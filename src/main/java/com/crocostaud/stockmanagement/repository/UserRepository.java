@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<ShopUser, Long> {
     ShopUser findByUsername(String username);
 
@@ -24,4 +26,7 @@ public interface UserRepository extends JpaRepository<ShopUser, Long> {
     @Modifying
     @Query("update users u set u.username = ?1, u.password = ?2, u.email = ?3, u.phone = ?4 where u.id = ?5")
     void updateUsernameAndPasswordAndEmailAndPhoneByIdAllIgnoreCase(String username, String password, String email, String phone, Long id);
+
+    @Query("select u from users u where u.shop.id = ?1")
+    List<ShopUser> findByShop_Id(Long id);
 }

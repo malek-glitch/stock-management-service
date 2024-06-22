@@ -1,6 +1,8 @@
 package com.crocostaud.stockmanagement.controller;
 
+import com.crocostaud.stockmanagement.dto.part.PartDetail;
 import com.crocostaud.stockmanagement.dto.part.PartDto;
+import com.crocostaud.stockmanagement.service.PartService;
 import com.crocostaud.stockmanagement.service.SearchService;
 import com.crocostaud.stockmanagement.utils.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +14,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/search")
 public class SearchController {
-
     private final SearchService searchService;
+    private final PartService partService;
 
-    public SearchController(SearchService searchService) {
+    public SearchController(SearchService searchService, PartService partService) {
         this.searchService = searchService;
+        this.partService = partService;
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<List<PartDto>> search(@RequestBody SearchRequest search) {
-
         if (!isTextEmpty(search)) {
             if (search.submodelId() != null)
                 return ResponseEntity.ok(searchService.searchBySubmodel(search.submodelId(), search.text()));
@@ -56,6 +58,12 @@ public class SearchController {
         if (equivalentPart == null || equivalentPart.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(equivalentPart);
+    }
+
+    @GetMapping("part/{id}")
+    public ResponseEntity<PartDetail> searchPart(@PathVariable("id") Long id) {
+        PartDetail partDetail = partService.getPartDetail(id);
+        return ResponseEntity.ok(partDetail);
     }
 
     private boolean isTextEmpty(SearchRequest search) {

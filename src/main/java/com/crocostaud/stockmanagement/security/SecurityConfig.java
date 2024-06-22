@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(HttpMethod.POST, "/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/shop").permitAll()
                         .requestMatchers("/search/**").permitAll()
                         .requestMatchers("/car/**").permitAll()
                         .anyRequest().authenticated()

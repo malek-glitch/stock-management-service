@@ -102,8 +102,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAll() {
-        return userRepo.findAll().stream().map(this::mapToDto).toList();
+    public List<UserDto> getAll(Long shopId) {
+        List<ShopUser> byShop = userRepo.findByShop_Id(shopId);
+        return byShop.stream().map(this::mapToDto).toList();
     }
 
     @Override

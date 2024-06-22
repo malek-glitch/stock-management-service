@@ -45,10 +45,10 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .price(orderItemDto.getPrice())
                 .quantity(orderItemDto.getQuantity())
                 .TVA(orderItemDto.getTVA())
-                .discount(orderItemDto.getDiscount())
+                .benefice(orderItemDto.getBenefice())
                 .build();
         OrderItem savedOrderItem = orderItemRepo.save(orderItem);
-        // TODO add shop id to this method : Done
+
         inventoryService.createInventory(orderItemDto, shopId);
         return mapToDto(savedOrderItem);
     }
@@ -73,7 +73,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .price(orderItem.getPrice())
                 .quantity(orderItem.getQuantity())
                 .TVA(orderItem.getTVA())
-                .discount(orderItem.getDiscount())
+                .benefice(orderItem.getBenefice())
                 .build();
     }
 }

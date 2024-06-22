@@ -24,14 +24,14 @@ public class Part {
     @Column(name = "imageUrl")
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
     private Category category;
 
-    @OneToMany(mappedBy = "part")
+    @OneToMany(mappedBy = "part", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Description> descriptions;
 
-    @ManyToMany(mappedBy = "parts")
+    @ManyToMany(mappedBy = "parts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Original> originals;
 
     @ManyToOne

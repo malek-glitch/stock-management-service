@@ -1,7 +1,6 @@
 package com.crocostaud.stockmanagement.controller;
 
 import com.crocostaud.stockmanagement.dto.stock.ProviderDto;
-import com.crocostaud.stockmanagement.model.stock.Provider;
 import com.crocostaud.stockmanagement.model.stock.ShopUser;
 import com.crocostaud.stockmanagement.service.ProviderService;
 import com.crocostaud.stockmanagement.utils.annotation.User;
@@ -34,11 +33,11 @@ public class ProviderController {
     }
 
     @GetMapping("/{providerId}")
-    public ResponseEntity<Provider> get(@PathVariable Long providerId, @User ShopUser user) {
+    public ResponseEntity<ProviderDto> get(@PathVariable Long providerId, @User ShopUser user) {
 
-        Provider provider = providerService.getProvider(providerId);
+        ProviderDto provider = providerService.getProvider(providerId);
 
-        if (provider == null || user.getShop() == null || !Objects.equals(provider.getShop().getId(), user.getShop().getId()))
+        if (provider == null || user.getShop() == null || !Objects.equals(provider.getShopId(), user.getShop().getId()))
             return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(provider);
@@ -46,7 +45,6 @@ public class ProviderController {
 
     @PostMapping
     public ResponseEntity<ProviderDto> create(@RequestBody ProviderDto providerDto, @User ShopUser user) {
-
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
         providerDto.setShopId(user.getShop().getId());
@@ -69,8 +67,8 @@ public class ProviderController {
 
         if (user == null || user.getShop() == null)
             return ResponseEntity.badRequest().build();
-        Provider provider = providerService.getProvider(providerId);
-        if (provider == null || !Objects.equals(provider.getShop().getId(), user.getShop().getId()))
+        ProviderDto provider = providerService.getProvider(providerId);
+        if (provider == null || !Objects.equals(provider.getShopId(), user.getShop().getId()))
             throw new ResponseStatusException(HttpStatusCode.valueOf(401), "Unauthorized");
         providerService.removeProvider(providerId);
         return ResponseEntity.noContent().build();

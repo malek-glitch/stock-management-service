@@ -3,7 +3,7 @@ package com.crocostaud.stockmanagement.service.impl;
 import com.crocostaud.stockmanagement.dto.stock.ClientDto;
 import com.crocostaud.stockmanagement.dto.stock.ShopDto;
 import com.crocostaud.stockmanagement.dto.stock.WarehouseDto;
-import com.crocostaud.stockmanagement.model.stock.*;
+import com.crocostaud.stockmanagement.model.stock.Shop;
 import com.crocostaud.stockmanagement.repository.ShopRepository;
 import com.crocostaud.stockmanagement.service.ClientService;
 import com.crocostaud.stockmanagement.service.ShopService;
@@ -70,36 +70,6 @@ public class ShopServiceImpl implements ShopService {
             return null;
         shopRepo.updateNameAndEmailAndPhoneNumbersById(id, shopDto.getName(), shopDto.getEmail(), shopDto.getPhone());
         return mapToDto(shopRepo.findById(id).get());
-    }
-
-    @Override
-    public void addClient(Client client) {
-        //TODO : implement
-    }
-
-    @Override
-    public void addSupplier(Provider provider) {
-        //TODO : implement
-    }
-
-    @Override
-    public void addInventory(Inventory inventory) {
-        //TODO : implement
-    }
-
-    @Override
-    public void addWarehouse(Warehouse warehouse) {
-        //TODO : implement
-    }
-
-    @Override
-    public void addSell(Sell sell) {
-        //TODO : implement
-    }
-
-    @Override
-    public void addOrder(Order order) {
-        //TODO : implement
     }
 
     @Override

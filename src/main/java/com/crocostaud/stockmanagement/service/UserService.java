@@ -19,7 +19,7 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
-    List<UserDto> getAll();
+    List<UserDto> getAll(Long shopId);
 
     void setShop(Long id, Long savedShopId);
 }

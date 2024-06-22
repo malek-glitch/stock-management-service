@@ -31,6 +31,7 @@ public class OrderItem extends CommandeItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    private Integer benefice;
 
 
     @Override

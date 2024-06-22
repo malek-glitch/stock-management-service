@@ -21,7 +21,7 @@ public class Category {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Part> parts;
 
     @Override

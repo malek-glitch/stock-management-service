@@ -30,8 +30,7 @@ public class CommandeItem {
     protected double price;
     /**this field represent the value of the TVA per cent (e.g. 19%, 7%)*/
     protected int TVA;
-    /** this field represent the discount percentage for the item (e.g. 15%, 10%)*/
-    protected int discount;
+
 
     @Override
     public boolean equals(Object o) {

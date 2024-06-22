@@ -20,7 +20,7 @@ public final class OrderItemDto implements Serializable {
     private Double price;
     private String partName;
     private int TVA;
-    private int discount;
+    private int benefice;
 
     private Long partId;
     private Long orderId;

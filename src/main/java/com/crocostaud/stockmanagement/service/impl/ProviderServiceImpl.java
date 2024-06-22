@@ -37,7 +37,7 @@ public class ProviderServiceImpl implements ProviderService {
         if (!providerRepo.existsById(id))
             throw new RuntimeException("provider not found");
 
-        providerRepo.updateNameAndEmailAndPhoneById(providerDto.getName(), providerDto.getEmail(), providerDto.getPhone(), id);
+        providerRepo.update(providerDto.getName(), providerDto.getEmail(), providerDto.getPhone(), providerDto.getAddress(), id);
 
         Provider updatedProvider = Provider.builder()
                 .id(id)
@@ -50,9 +50,8 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     @Override
-    public Provider getProvider(Long id) {
-        return providerRepo.findById(id)
-                .orElse(null);
+    public ProviderDto getProvider(Long id) {
+        return mapToDto(providerRepo.findById(id).orElse(null));
     }
 
     @Override
@@ -62,7 +61,11 @@ public class ProviderServiceImpl implements ProviderService {
 
     @Override
     public List<ProviderDto> getAllProviders(Long shopId) {
-        return providerRepo.findByShop_Id(shopId);
+        return providerRepo
+                .findByShop_Id(shopId)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
     private ProviderDto mapToDto(Provider provider) {

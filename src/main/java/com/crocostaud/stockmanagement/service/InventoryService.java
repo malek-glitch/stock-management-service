@@ -16,6 +16,8 @@ public interface InventoryService {
 
     List<InventoryDto> getInventoryByShopId(Long ShopId);
 
+    List<InventoryDto> getInventoryByPartId(Long partId);
+
     InventoryDto createInventory(InventoryDto inventoryDto);
 
     InventoryDto createInventory(OrderItemDto orderItemDto, Long shopId);
@@ -23,6 +25,7 @@ public interface InventoryService {
     InventoryDto updateInventory(SellItemDto sellItemDto, Long shopId);
 
     InventoryDto updateInventory(InventoryDto inventoryDto, Long id);
+
 
     void deleteInventory(Long id);
 

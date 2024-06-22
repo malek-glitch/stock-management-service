@@ -42,4 +42,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
     @Query("select i from Inventory i where i.shop.id = ?1")
     List<Inventory> findByShop_Id(Long id);
+
+    @Query("select i from Inventory i where i.part.id = ?1")
+    List<Inventory> findByPart_Id(Long id);
 }

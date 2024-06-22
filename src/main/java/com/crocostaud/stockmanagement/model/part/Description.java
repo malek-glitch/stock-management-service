@@ -21,7 +21,7 @@ public class Description {
     private String attribute;
     private String value;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "part_id")
     private Part part;
 
