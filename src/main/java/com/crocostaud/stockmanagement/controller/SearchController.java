@@ -66,6 +66,11 @@ public class SearchController {
         return ResponseEntity.ok(partDetail);
     }
 
+    @GetMapping("/byref/{ref}")
+    public ResponseEntity<List<PartDto>> searchByRef(@PathVariable String ref){
+        return ResponseEntity.ok(searchService.searchByText(ref));
+    }
+
     private boolean isTextEmpty(SearchRequest search) {
         return search.text() == null || search.text().trim().isEmpty();
     }

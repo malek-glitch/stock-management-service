@@ -75,6 +75,11 @@ public class SearchServiceImpl implements SearchService {
 
     }
 
+    @Override
+    public List<PartDto> all() {
+        return partRepo.findAll().stream().map(this::mapToDto).toList();
+    }
+
     private PartDto mapToDto(Part part) {
         return PartDto.builder()
                 .id(part.getId())

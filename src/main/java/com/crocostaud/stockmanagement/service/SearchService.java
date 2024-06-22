@@ -3,6 +3,7 @@ package com.crocostaud.stockmanagement.service;
 import com.crocostaud.stockmanagement.dto.part.PartDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SearchService {
     List<PartDto> searchByText(String text);
@@ -21,4 +22,6 @@ public interface SearchService {
     List<PartDto> searchByCategoryAndSubmodel(Long categoryId, Long submodelId);
 
     List<PartDto> searchEquivalentPart(Long PartId);
+
+    List<PartDto> all();
 }

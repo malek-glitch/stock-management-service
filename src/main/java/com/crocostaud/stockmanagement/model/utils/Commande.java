@@ -5,10 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -32,7 +29,8 @@ public class Commande {
     protected Double totalPrice;
 
     /**this field represent the discount percentage for the item (e.g. 15%, 10%)*/
-    protected int discount;
+    @Builder.Default()
+    protected int discount = 0;
 
     /**this field represent the paid amount of the total price of the {@link Commande commande} <br/>
      * if the paid amount is equivalent to the total price then the {@link Order order}
